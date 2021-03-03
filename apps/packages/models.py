@@ -1,32 +1,48 @@
 from django.db import models
-
+from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 from rest_framework.exceptions import ValidationError
 
 
+class ParentPackageCategoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(parent__isnull=True)
+
+
 class PackageCategory(models.Model):
-    parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, default=None, blank=True,
-                               verbose_name='دسته بندی والد')
-    title = models.CharField(max_length=100, unique=True, verbose_name='نام دسته بندی')
+    title = models.CharField(_('title'), max_length=50)
+    slug = models.SlugField(_('slug'), max_length=50, unique=True, allow_unicode=True)
+    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name="children", verbose_name=_("parent"))
+    description = models.TextField(_('description'), blank=True)
+    sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
+    is_enable = models.BooleanField(_("is enable"), default=True)
     icon = models.ImageField(verbose_name='آیکون دسته بندی')
 
-    @property
-    def children(self):
-        return self.children
+    objects = models.Manager()
+    parents = ParentPackageCategoryManager()
 
-    @property
-    def parents(self):
-        all_parents = []
-        current_parent = self.parent
-        while current_parent:
-            all_parents.append(current_parent)
-            current_parent = current_parent.parent
-        return all_parents
+    @classmethod
+    def category_tree(cls, cat_parent=None):
+        qs = cls.objects.filter(is_enable=True)
+        if cat_parent is None:
+            qs = qs.filter(parent__isnull=True)
+        else:
+            qs = qs.filter(parent=cat_parent)
 
-    @property
-    def siblings(self):
-        return PackageCategory.objects.filter(parent=self.parent).exclude(id=self.id)
+        cat_list = []
+        for cat in qs:
+            cat_dict = {
+                "category": cat,
+                "subs": cls.category_tree(cat)
+            }
+
+            # if not cat_dict["subs"]:
+            #     cat_dict["articles"] = Package.approves.filter(categories=cat)[:3]
+
+            cat_list.append(cat_dict)
+
+        return cat_list
 
     def __str__(self):
         return self.title
@@ -56,6 +72,8 @@ class Package(models.Model):
     def clean(self):
         if self.discount > 100:
             raise ValidationError('مقدار تخفیف بیش از ۱۰۰ درصد نمیتواند باشد')
+
+
 
     @staticmethod
     def get_enable_queryset():

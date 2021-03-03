@@ -4,9 +4,14 @@ from apps.packages.models import Package, PackageCategory
 
 
 class PackageCategorySerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
     class Meta:
         model = PackageCategory
-        fields = '__all__'
+        fields = ('id', 'title', 'slug', 'created_time', 'children')
+
+    def get_children(self, obj):
+        return PackageCategorySerializer(obj.children.filter(is_enable=True), many=True).data
 
 
 class PackageSerializer(serializers.ModelSerializer):
