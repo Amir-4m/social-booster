@@ -3,6 +3,9 @@ import re
 from django.db import models
 from django.utils.functional import Promise
 
+from utils.utils import number_converter
+from utils.validators import validate_phone_number
+
 
 class CustomBigIntegerField(models.BigIntegerField):
     def get_prep_value(self, value):

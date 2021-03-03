@@ -12,13 +12,13 @@ from utils.validators import clean_mobile_number_validator
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, phone_number, password, **extra_fields):
+    def _create_user(self, username, password, **extra_fields):
         """
         Create and save a user with the given phone number, and password.
         """
-        if not phone_number:
+        if not username:
             raise ValueError('The given phone number must be set')
-        user = self.model(phone_number=phone_number, **extra_fields)
+        user = User(phone_number=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
