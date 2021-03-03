@@ -11,8 +11,25 @@ class PackageCategory(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name='نام دسته بندی')
     icon = models.ImageField(verbose_name='آیکون دسته بندی')
 
+    @property
+    def children(self):
+        return self.children
+
+    @property
+    def parents(self):
+        all_parents = []
+        current_parent = self.parent
+        while current_parent:
+            all_parents.append(current_parent)
+            current_parent = current_parent.parent
+        return all_parents
+
+    @property
+    def siblings(self):
+        return PackageCategory.objects.filter(parent=self.parent).exclude(id=self.id)
+
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
         verbose_name = 'دسته بندی پکیج'
@@ -34,7 +51,7 @@ class Package(models.Model):
     is_enable = models.BooleanField(default=True, choices=is_enable_choices)
 
     def __str__(self):
-        return f"{self.name} {self.category.name}"
+        return f"{self.name} {self.category.title}"
 
     def clean(self):
         if self.discount > 100:
