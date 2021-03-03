@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 class PackageCategory(models.Model):
     parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, default=None, blank=True,
                                verbose_name='دسته بندی والد')
-    name = models.CharField(max_length=100, unique=True, verbose_name='نام دسته بندی')
+    title = models.CharField(max_length=100, unique=True, verbose_name='نام دسته بندی')
     icon = models.ImageField(verbose_name='آیکون دسته بندی')
 
     def __str__(self):
