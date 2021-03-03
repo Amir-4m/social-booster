@@ -11,13 +11,14 @@ class ParentPackageCategoryManager(models.Manager):
 
 
 class PackageCategory(models.Model):
-    title = models.CharField(_('title'), max_length=50)
-    slug = models.SlugField(_('slug'), max_length=50, unique=True, allow_unicode=True)
-    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name="children", verbose_name=_("parent"))
-    description = models.TextField(_('description'), blank=True)
-    sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
-    is_enable = models.BooleanField(_("is enable"), default=True)
-    icon = models.ImageField(verbose_name='آیکون دسته بندی')
+    title = models.CharField(verbose_name=_('title'), max_length=50)
+    slug = models.SlugField(verbose_name=_('slug'), max_length=50, unique=True, allow_unicode=True)
+    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name="children", verbose_name=_("Parent"))
+    description = models.TextField(_('Description'), blank=True)
+    sort_by = models.PositiveSmallIntegerField(_('Sort'), default=0)
+    is_enable = models.BooleanField(_("Is enable"), default=True)
+    icon = models.ImageField(verbose_name=_("Package Icon"))
+    created_time = models.DateField(auto_now_add=True, verbose_name=_("Created time"))
 
     objects = models.Manager()
     parents = ParentPackageCategoryManager()
@@ -53,13 +54,13 @@ class PackageCategory(models.Model):
 
 
 class Package(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name='نام بسته')
-    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE, verbose_name='دسته بندی')
-    price = models.PositiveIntegerField(verbose_name='هزینه بسته')
-    target_no = models.PositiveIntegerField(verbose_name='تعداد درخواست')
-    created = models.DateField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    updated = models.DateField(auto_now=True, verbose_name='تاریخ به روزرسانی')
-    discount = models.PositiveSmallIntegerField(default=0, verbose_name='تخفیف', help_text='در صورتی که صفر باشد در نظر گرفته نخواهد شد')
+    name = models.CharField(max_length=100, unique=True, verbose_name=_("Package name"))
+    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE, verbose_name=_("Category"))
+    price = models.PositiveIntegerField(verbose_name=_("Package price"))
+    target_no = models.PositiveIntegerField(verbose_name=_("Request number"))
+    created_time = models.DateField(auto_now_add=True, verbose_name=_("Created time"))
+    updated_time = models.DateField(auto_now=True, verbose_name=_("Updated time"))
+    discount = models.PositiveSmallIntegerField(default=0, verbose_name=_("Discount"), help_text='در صورتی که صفر باشد در نظر گرفته نخواهد شد')
     is_enable_choices = (
         (True, 'هست'),
         (False, 'نیست')

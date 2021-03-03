@@ -8,7 +8,7 @@ class PackageCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PackageCategory
-        fields = ('id', 'title', 'slug', 'created_time', 'children')
+        fields = ('id', 'title', 'slug', 'children')
 
     def get_children(self, obj):
         return PackageCategorySerializer(obj.children.filter(is_enable=True), many=True).data
