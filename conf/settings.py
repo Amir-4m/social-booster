@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 # load the environment variable handler library
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,12 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG")
-DEVEL = config("DEVEL")
+DEBUG = config('DEBUG', default=False, cast=bool)
+DEVEL = config('DEVEL', default=False, cast=bool)
+SITE_ID = 1
 
-ALLOWED_HOSTS = [
-    config("ALLOWED_HOSTS")
-]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
 
 
 # Application definition
@@ -78,6 +77,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "conf.asgi.application"
 WSGI_APPLICATION = 'conf.wsgi.application'
 
 
@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql_psycopg2'),
         'NAME': config('DATABASE_NAME', default='social_boost_db'),
         'USER': config('DATABASE_USER', default='admin'),
         'PASSWORD': config('DATABASE_PASSWORD', default='123456'),
