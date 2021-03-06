@@ -17,7 +17,7 @@ class PackageCategory(models.Model):
     description = models.TextField(_('Description'), blank=True)
     sort_by = models.PositiveSmallIntegerField(_('Sort'), default=0)
     is_enable = models.BooleanField(_("Is enable"), default=True)
-    icon = models.ImageField(verbose_name=_("Package Icon"))
+    icon = models.ImageField(verbose_name=_("Package Icon"), upload_to='categories_icon')
     created_time = models.DateField(auto_now_add=True, verbose_name=_("Created time"))
 
     objects = models.Manager()
