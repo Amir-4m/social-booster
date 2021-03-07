@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,16 +18,21 @@ class PackageCategoryManager(models.Manager):
 
 
 class PackageCategory(models.Model):
-    title = models.CharField(verbose_name=_('title'), max_length=50)
-    slug = models.SlugField(verbose_name=_('slug'), max_length=50, unique=True, allow_unicode=True)
-    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name="children", verbose_name=_("Parent"))
+    created_time = models.DateField(_("Created time"), auto_now_add=True)
+    updated_time = models.DateField(_("Updated time"), auto_now=True)
+
+    title = models.CharField(_('title'), max_length=50)
+    slug = models.SlugField(_('slug'), max_length=50, unique=True, allow_unicode=True)
+    parent = models.ForeignKey('self', verbose_name=_("Parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
     description = models.TextField(_('Description'), blank=True)
     sort_by = models.PositiveSmallIntegerField(_('Sort'), default=0)
     is_enable = models.BooleanField(_("Is enable"), default=True)
-    icon = models.ImageField(verbose_name=_("Package Icon"), upload_to='categories_icon')
-    created_time = models.DateField(auto_now_add=True, verbose_name=_("Created time"))
+    icon = models.ImageField(_("Package Icon"), upload_to='categories_icon')
 
-    objects = PackageCategoryManager
+    objects = PackageCategoryManager()
+
+    def __str__(self):
+        return self.title
 
     @classmethod
     def category_tree(cls, cat_parent=None):
@@ -50,12 +56,12 @@ class PackageCategory(models.Model):
 
         return cat_list
 
-    def __str__(self):
-        return self.title
 
-    class Meta:
-        verbose_name = 'دسته بندی پکیج'
-        verbose_name_plural = 'دسته بندی های پکیج ها'
+class PackageManager(models.Manager):
+
+    def live(self):
+        qs = self.get_queryset()
+        return qs.filter(is_enable=True)
 
 
 class Package(models.Model):
@@ -66,23 +72,16 @@ class Package(models.Model):
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
     price = models.PositiveIntegerField(verbose_name=_("Package price"))
     target_no = models.PositiveIntegerField(verbose_name=_("Request number"))
-    discount = models.PositiveSmallIntegerField(_("discount"), default=0, help_text='در صورتی که صفر باشد در نظر گرفته نخواهد شد')
+    discount = models.PositiveSmallIntegerField(_("discount"), default=0, validators=[MaxValueValidator(100)],
+                                                help_text=_("Does not considered if its equal to 0"))
     is_enable = models.BooleanField(default=True)
+
+    objects = PackageManager()
 
     def __str__(self):
         return f"{self.name} {self.category.title}"
 
-    def clean(self):
-        if self.discount > 100:
-            raise ValidationError('مقدار تخفیف بیش از ۱۰۰ درصد نمیتواند باشد')
 
-    @staticmethod
-    def get_enable_queryset():
-        return Package.objects.filter(is_enable=True)
-
-    class Meta:
-        verbose_name = 'بسته'
-        verbose_name_plural = 'بسته ها'
 
 
 
