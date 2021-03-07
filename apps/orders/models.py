@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import setttings
 
-# Create your models here.
 from apps.packages.models import Package
-from conf import settings
 
 
 class Order(models.Model):
@@ -24,15 +23,13 @@ class Order(models.Model):
     created_time = models.DateField(auto_now_add=True, verbose_name=_("Create time"))
     updated_time = models.DateField(auto_now=True, verbose_name=_("Update time"))
 
-    @property
-    def owner_name(self):
-        return f"{self.owner.phone_number} {self.owner.first_name} {self.owner.last_name}"
-
-    def __str__(self):
-        return self.package.name
-
     class Meta:
         verbose_name = 'سفارش'
         verbose_name_plural = 'سفارشات'
 
+    def __str__(self):
+        return self.package.name
 
+    @property
+    def owner_name(self):
+        return f"{self.owner.phone_number} {self.owner.first_name} {self.owner.last_name}"

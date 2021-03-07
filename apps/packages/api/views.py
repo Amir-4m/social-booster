@@ -32,7 +32,7 @@ class PackageCategoryViewSet(ListModelMixin,
 
     """
     serializer_class = PackageCategorySerializer
-    queryset = PackageCategory.parents.filter(is_enable=True)
+    queryset = PackageCategory.objects.parents()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['title', ]
     ordering_fields = ['id', 'title']

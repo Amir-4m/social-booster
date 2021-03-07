@@ -28,25 +28,25 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 DEVEL = config('DEVEL', default=False, cast=bool)
-SITE_ID = 1
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'apps.accounts',
+    'apps.packages',
+    'apps.orders',
+
+    'drf_yasg',
+    'rest_framework',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'drf_yasg',
-    'apps.accounts',
-    'apps.orders',
-    'apps.packages',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -80,10 +80,8 @@ TEMPLATES = [
 ASGI_APPLICATION = "conf.asgi.application"
 WSGI_APPLICATION = 'conf.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql_psycopg2'),
@@ -95,10 +93,10 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -124,7 +122,7 @@ USE_L10N = False
 USE_TZ = False
 
 # cache settings for Django
-CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='HAMISOCIALBOOST')
+CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='SOCIAL_BOOST')
 # CACHES = {
 #     'default': {
 #         'BACKEND': config('CACHE_BACKEND'),
@@ -136,10 +134,11 @@ CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='HAMISOCIALBOOST')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'accounts.User'
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = config('MEDIA_URL', default='/media/')
 
 
 REST_FRAMEWORK = {
@@ -160,7 +159,3 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=config('REFRESH_TOKEN_LIFETIME', default=3600, cast=int)),
     'ROTATE_REFRESH_TOKENS': True,
 }
-
-
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = config('MEDIA_URL', default='/media/')
