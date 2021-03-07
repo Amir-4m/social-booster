@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 # load the environment variable handler library
@@ -125,14 +125,14 @@ USE_TZ = False
 
 # cache settings for Django
 CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='HAMISOCIALBOOST')
-CACHES = {
-    'default': {
-        'BACKEND': config('CACHE_BACKEND'),
-        'LOCATION': config('CACHE_LOCATION'),
-        'KEY_PREFIX': CACHE_KEY_PREFIX,
-        'TIMEOUT': None,
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': config('CACHE_BACKEND'),
+#         'LOCATION': config('CACHE_LOCATION'),
+#         'KEY_PREFIX': CACHE_KEY_PREFIX,
+#         'TIMEOUT': None,
+#     }
+# }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -140,6 +140,27 @@ CACHES = {
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'utils.exception_handlers.custom_exception_handler',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 20,
+    'DEFAULT_THROTTLE_RATES': {
+        'register': '2/minute',
+        'obtain-token': '2/minute',
+        'free_register': '5/hour',
+        'forgot-password': '1/minute',
+    },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('ACCESS_TOKEN_LIFETIME', default=120, cast=int)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=config('REFRESH_TOKEN_LIFETIME', default=3600, cast=int)),
+    'ROTATE_REFRESH_TOKENS': True,
+}
+
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = config('MEDIA_URL', default='/media/')
