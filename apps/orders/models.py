@@ -30,4 +30,4 @@ class Order(models.Model):
 
     @property
     def owner_name(self):
-        return f"{self.owner.phone_number} {self.owner.first_name} {self.owner.last_name}"
+        return f"{self.owner.phone_number}"

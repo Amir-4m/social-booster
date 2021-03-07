@@ -90,7 +90,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'avatar', 'gender', 'birth_date', 'email_address', 'has_password']
+        fields = ['avatar', 'gender', 'birth_date', 'email_address', 'has_password']
 
     def validate(self, attrs):
         attrs = super().validate(attrs)

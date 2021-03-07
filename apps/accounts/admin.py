@@ -33,9 +33,9 @@ class MyUserAdmin(UserAdmin):
 class UserProfileAdmin(admin.ModelAdmin):
     raw_id_fields = ("user",)
     list_select_related = ['user', ]
-    list_display = ['user', 'first_name', 'last_name']
+    list_display = ['user', ]
     autocomplete_fields = ['user', ]
-    search_fields = ['user__phone_number', 'first_name', 'last_name']
+    search_fields = ['user__phone_number', ]
     actions = None
 
     def has_delete_permission(self, request, obj=None):

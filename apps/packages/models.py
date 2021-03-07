@@ -18,18 +18,22 @@ class PackageCategoryManager(models.Manager):
 
 
 class PackageCategory(models.Model):
-    created_time = models.DateField(_("Created time"), auto_now_add=True)
-    updated_time = models.DateField(_("Updated time"), auto_now=True)
+    created_time = models.DateField(_("created time"), auto_now_add=True)
+    updated_time = models.DateField(_("updated time"), auto_now=True)
 
     title = models.CharField(_('title'), max_length=50)
     slug = models.SlugField(_('slug'), max_length=50, unique=True, allow_unicode=True)
-    parent = models.ForeignKey('self', verbose_name=_("Parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
-    description = models.TextField(_('Description'), blank=True)
-    sort_by = models.PositiveSmallIntegerField(_('Sort'), default=0)
-    is_enable = models.BooleanField(_("Is enable"), default=True)
-    icon = models.ImageField(_("Package Icon"), upload_to='categories_icon')
+    parent = models.ForeignKey('self', verbose_name=_("parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
+    description = models.TextField(_('description'), blank=True)
+    sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
+    is_enable = models.BooleanField(_("is enable"), default=True)
+    icon = models.ImageField(_("package Icon"), upload_to='categories_icon')
 
     objects = PackageCategoryManager()
+
+    class Meta:
+        verbose_name = 'Package category'
+        verbose_name_plural = 'Package categories'
 
     def __str__(self):
         return self.title
@@ -49,8 +53,8 @@ class PackageCategory(models.Model):
                 "subs": cls.category_tree(cat)
             }
 
-            # if not cat_dict["subs"]:
-            #     cat_dict["articles"] = Package.approves.filter(categories=cat)[:3]
+            if not cat_dict["subs"]:
+                cat_dict["packages"] = Package.live().filter(categories=cat)[:3]
 
             cat_list.append(cat_dict)
 
@@ -65,13 +69,13 @@ class PackageManager(models.Manager):
 
 
 class Package(models.Model):
-    created_time = models.DateField(auto_now_add=True, verbose_name=_("Created time"))
-    updated_time = models.DateField(auto_now=True, verbose_name=_("Updated time"))
+    created_time = models.DateField(auto_now_add=True, verbose_name=_("created time"))
+    updated_time = models.DateField(auto_now=True, verbose_name=_("updated time"))
 
-    name = models.CharField(_("Package name"), max_length=100, unique=True)
+    name = models.CharField(_("package name"), max_length=100)
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField(verbose_name=_("Package price"))
-    target_no = models.PositiveIntegerField(verbose_name=_("Request number"))
+    price = models.PositiveIntegerField(verbose_name=_("package price"))
+    target_no = models.PositiveIntegerField(verbose_name=_("request number"))
     discount = models.PositiveSmallIntegerField(_("discount"), default=0, validators=[MaxValueValidator(100)],
                                                 help_text=_("Does not considered if its equal to 0"))
     is_enable = models.BooleanField(default=True)
