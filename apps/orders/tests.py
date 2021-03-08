@@ -1,4 +1,6 @@
 import random
+from unittest import mock
+from unittest.mock import patch
 
 import requests
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -41,14 +43,12 @@ class TestOrderGateway(APITestCase):
                 )
         self.package = Package.objects.create(
             name="Golden",
-            category=random.choice(PackageCategory.parents()),
+            category=random.choice(PackageCategory.objects.parents()),
             price=10000,
             target_no=200,
             is_enable=True
         )
-        self.gateway = AllowedGateway.objects.create(
-            version_pattern='somepattern',
-            gateway_code='gateway_code'
-        )
+        self.gateway = mock.Mock(spec=AllowedGateway)
+
 
 
