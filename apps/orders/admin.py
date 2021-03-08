@@ -12,3 +12,9 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('is_paid', 'gateway', )
     search_fields = ('owner__username', )
 
+
+@admin.register(orders_model.AllowedGateway)
+class AllowedGatewayAdmin(admin.ModelAdmin):
+    list_display = ('version_pattern', 'gateways_code')
+    search_fields = ('version_name', 'gateways_code')
+
