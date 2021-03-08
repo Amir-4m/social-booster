@@ -159,3 +159,10 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=config('REFRESH_TOKEN_LIFETIME', default=3600, cast=int)),
     'ROTATE_REFRESH_TOKENS': True,
 }
+
+
+DEVLYTIC_TOKEN = config('DEVLYTIC_TOKEN', default='')
+PUSH_API_URL = config('PUSH_API_URL', default='')
+PAYMENT_API_URL = config('PAYMENT_API_URL', default='')
+PAYMENT_SERVICE_SECRET = config('PAYMENT_SERVICE_SECRET', default='')
+CAFE_BAZAAR_PACKAGE_NAME = config('CAFE_BAZAAR_PACKAGE_NAME')
