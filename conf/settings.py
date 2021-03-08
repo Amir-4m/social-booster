@@ -9,11 +9,11 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 # load the environment variable handler library
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,25 +26,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG")
-DEVEL = config("DEVEL")
+DEBUG = config('DEBUG', default=False, cast=bool)
+DEVEL = config('DEVEL', default=False, cast=bool)
 
-ALLOWED_HOSTS = [
-    config("ALLOWED_HOSTS")
-]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'apps.accounts',
+    'apps.packages',
+    'apps.orders',
+
+    'drf_yasg',
+    'rest_framework',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.accounts',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -75,15 +77,14 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "conf.asgi.application"
 WSGI_APPLICATION = 'conf.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql_psycopg2'),
         'NAME': config('DATABASE_NAME', default='social_boost_db'),
         'USER': config('DATABASE_USER', default='admin'),
         'PASSWORD': config('DATABASE_PASSWORD', default='123456'),
@@ -92,10 +93,10 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -121,20 +122,47 @@ USE_L10N = False
 USE_TZ = False
 
 # cache settings for Django
-CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='HAMISOCIALBOOST')
-CACHES = {
-    'default': {
-        'BACKEND': config('CACHE_BACKEND'),
-        'LOCATION': config('CACHE_LOCATION'),
-        'KEY_PREFIX': CACHE_KEY_PREFIX,
-        'TIMEOUT': None,
-    }
-}
+CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='SOCIAL_BOOST')
+# CACHES = {
+#     'default': {
+#         'BACKEND': config('CACHE_BACKEND'),
+#         'LOCATION': config('CACHE_LOCATION'),
+#         'KEY_PREFIX': CACHE_KEY_PREFIX,
+#         'TIMEOUT': None,
+#     }
+# }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'accounts.User'
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = config('MEDIA_URL', default='/media/')
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'utils.exception_handlers.custom_exception_handler',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 20,
+    'DEFAULT_THROTTLE_RATES': {
+        'register': '2/minute',
+        'obtain-token': '2/minute',
+        'free_register': '5/hour',
+        'forgot-password': '1/minute',
+    },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('ACCESS_TOKEN_LIFETIME', default=120, cast=int)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=config('REFRESH_TOKEN_LIFETIME', default=3600, cast=int)),
+    'ROTATE_REFRESH_TOKENS': True,
+}
+
+
+DEVLYTIC_TOKEN = config('DEVLYTIC_TOKEN', default='')
+PUSH_API_URL = config('PUSH_API_URL', default='')
+PAYMENT_API_URL = config('PAYMENT_API_URL', default='')
+PAYMENT_SERVICE_SECRET = config('PAYMENT_SERVICE_SECRET', default='')
+CAFE_BAZAAR_PACKAGE_NAME = config('CAFE_BAZAAR_PACKAGE_NAME')

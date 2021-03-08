@@ -12,13 +12,13 @@ from utils.validators import clean_mobile_number_validator
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, phone_number, password, **extra_fields):
+    def _create_user(self, username, password, **extra_fields):
         """
         Create and save a user with the given phone number, and password.
         """
-        if not phone_number:
+        if not username:
             raise ValueError('The given phone number must be set')
-        user = self.model(phone_number=phone_number, **extra_fields)
+        user = User(phone_number=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -72,13 +72,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.verification_codes.filter(verification_code=verify_code).delete()
 
     def __str__(self):
-        return f'{self.first_name}-{self.last_name}, {str(self.phone_number)}'
+        return f'{str(self.phone_number)}'
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField('User', verbose_name=_('user'), on_delete=models.CASCADE, related_name='profile')
-    first_name = models.CharField(_('first name'), max_length=50, blank=True)
-    last_name = models.CharField(_('last name'), max_length=50, blank=True)
     avatar = models.ImageField(_('avatar'), blank=True, upload_to=profile_directory_path)
     gender = models.BooleanField(_('gender'), null=True, help_text=_('female is False, male is True, null is unset'))
     birth_date = models.DateField(_('birth date'), blank=True, null=True)
@@ -89,15 +87,11 @@ class UserProfile(models.Model):
         verbose_name_plural = _('User profiles')
 
     def __str__(self):
-        return self.full_name or f"user id: {self.user_id}"
-
-    @property
-    def full_name(self):
-        return f'{self.first_name} {self.last_name}'.strip()
+        return self.user.phone_number
 
 
 class VerifyCode(models.Model):
-    created_time = models.DateTimeField(_('creation time'), auto_now_add=True)
+    created_time = models.DateTimeField(_('created time'), auto_now_add=True)
     user = models.ForeignKey(User, verbose_name=_('user'), related_name='verification_codes', on_delete=models.PROTECT)
     verification_code = models.PositiveIntegerField(_('verification code'))
     verify_time = models.DateTimeField(_('verification time'), null=True)
