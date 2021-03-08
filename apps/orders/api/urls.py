@@ -6,9 +6,10 @@ from apps.orders.api.views import OrderViewSet, OrderGateWayAPIView, GatewayAPIV
 router = routers.SimpleRouter()
 router.register(r'orders', OrderViewSet, basename='orders')
 
-urlpatterns =[
+urlpatterns = [
     path('order-gateway/', OrderGateWayAPIView.as_view(), name='order-gateway'),
     path('gateways/', GatewayAPIView.as_view(), name='gateways-list'),
     path('purchase-verification/', PurchaseVerificationAPIView.as_view(), name='purchase-verification'),
-] + router.urls
+]
+urlpatterns += router.urls
 
