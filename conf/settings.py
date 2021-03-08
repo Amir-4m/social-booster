@@ -84,13 +84,13 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql_psycopg2'),
-        'NAME': config('DATABASE_NAME', default='social_boost_db'),
-        'USER': config('DATABASE_USER', default='admin'),
-        'PASSWORD': config('DATABASE_PASSWORD', default='123456'),
-        'HOST': config('DATABASE_HOST', default='0.0.0.0'),
-        'PORT': config('DATABASE_PORT', default='5432'),
-    }
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASS'),
+        'HOST': config('DB_HOST', default=""),
+        'PORT': config('DB_PORT', default=""),
+    },
 }
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -140,7 +140,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = config('MEDIA_URL', default='/media/')
 
-
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'EXCEPTION_HANDLER': 'utils.exception_handlers.custom_exception_handler',
@@ -160,9 +159,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-
-DEVLYTIC_TOKEN = config('DEVLYTIC_TOKEN', default='')
-PUSH_API_URL = config('PUSH_API_URL', default='')
 PAYMENT_API_URL = config('PAYMENT_API_URL', default='')
 PAYMENT_SERVICE_SECRET = config('PAYMENT_SERVICE_SECRET', default='')
 CAFE_BAZAAR_PACKAGE_NAME = config('CAFE_BAZAAR_PACKAGE_NAME')
