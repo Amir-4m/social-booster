@@ -11,10 +11,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
 from apps.packages.models import PackageCategory
-
-
-def rand_string():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(3))
+from utils.test_utils import rand_string
 
 
 class TestPackageCategories(APITestCase):
