@@ -69,13 +69,13 @@ class PackageManager(models.Manager):
 
 
 class Package(models.Model):
-    created_time = models.DateField(auto_now_add=True, verbose_name=_("created time"))
-    updated_time = models.DateField(auto_now=True, verbose_name=_("updated time"))
+    created_time = models.DateField(_("created time"), auto_now_add=True)
+    updated_time = models.DateField(_("updated time"), auto_now=True)
 
     name = models.CharField(_("package name"), max_length=100)
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField(verbose_name=_("package price"))
-    target_no = models.PositiveIntegerField(verbose_name=_("request number"))
+    price = models.PositiveIntegerField(_("package price"))
+    target_no = models.PositiveIntegerField(_("request number"))
     discount = models.PositiveSmallIntegerField(_("discount"), default=0, validators=[MaxValueValidator(100)],
                                                 help_text=_("Does not considered if its equal to 0"))
     is_enable = models.BooleanField(default=True)

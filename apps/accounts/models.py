@@ -91,7 +91,7 @@ class UserProfile(models.Model):
 
 
 class VerifyCode(models.Model):
-    created_time = models.DateTimeField(_('creation time'), auto_now_add=True)
+    created_time = models.DateTimeField(_('created time'), auto_now_add=True)
     user = models.ForeignKey(User, verbose_name=_('user'), related_name='verification_codes', on_delete=models.PROTECT)
     verification_code = models.PositiveIntegerField(_('verification code'))
     verify_time = models.DateTimeField(_('verification time'), null=True)
