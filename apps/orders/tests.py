@@ -48,7 +48,9 @@ class TestOrderGateway(APITestCase):
             target_no=200,
             is_enable=True
         )
-        self.gateway = mock.Mock(spec=AllowedGateway)
+        self.gateway = AllowedGateway(
+            gateways_code='SAMAN'
+        )
 
 
 

@@ -64,7 +64,7 @@ ROOT_URLCONF = 'conf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -165,4 +165,6 @@ CAFE_BAZAAR_PACKAGE_NAME = config('CAFE_BAZAAR_PACKAGE_NAME')
 
 SMS_GATE_WAY_URL = config('SMS_GATE_WAY_URL', default='')
 SMS_GATE_WAY_TOKEN = config('SMS_GATE_WAY_TOKEN', default='')
+VERIFY_CODE_MIN = config('VERIFY_CODE_MIN', cast=int, default=10000)
+VERIFY_CODE_MAX = config('VERIFY_CODE_MAX', cast=int, default=99999)
 

@@ -32,6 +32,7 @@ class PackageCategory(models.Model):
     objects = PackageCategoryManager()
 
     class Meta:
+        ordering = ['sort_by', 'id', ]
         verbose_name = 'Package category'
         verbose_name_plural = 'Package categories'
 
@@ -74,10 +75,14 @@ class Package(models.Model):
 
     name = models.CharField(_("package name"), max_length=100)
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField(_("package price"))
+    price = models.PositiveIntegerField(_('price'))
+    price_offer = models.PositiveIntegerField(_('price offer'), null=True, blank=True)
+    amount = models.PositiveIntegerField(_('amount'))
+    amount_offer = models.PositiveIntegerField(_('amount offer'), null=True, blank=True)
     target_no = models.PositiveIntegerField(_("request number"))
-    discount = models.PositiveSmallIntegerField(_("discount"), default=0, validators=[MaxValueValidator(100)],
-                                                help_text=_("Does not considered if its equal to 0"))
+    sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)
+    featured = models.DateTimeField(null=True, blank=True,
+                                    help_text=_('if this date field is specified, the coin package will be featured until this date'))
     is_enable = models.BooleanField(default=True)
 
     objects = PackageManager()
