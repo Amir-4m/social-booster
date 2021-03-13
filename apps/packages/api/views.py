@@ -25,7 +25,7 @@ class PackageCategoryViewSet(ListModelMixin,
             Return a specific category detail based on it's id.
     """
     serializer_class = PackageCategorySerializer
-    queryset = PackageCategory.objects.filter(is_enable=True, parent=None)
+    queryset = PackageCategory.objects.filter(is_enable=True, parent__isnull=True)
 
     def get_queryset(self):
         if self.action == 'retrieve':
