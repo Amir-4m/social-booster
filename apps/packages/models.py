@@ -1,9 +1,6 @@
-from django.core.validators import MaxValueValidator
 from django.db import models
+from django.core.validators import MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
-
-# Create your models here.
-from rest_framework.exceptions import ValidationError
 
 
 class PackageCategoryManager(models.Manager):
@@ -92,11 +89,3 @@ class Package(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.category.title}"
-
-
-
-
-
-
-
-
