@@ -104,7 +104,7 @@ class PurchaseVerificationAPIView(views.APIView):
 
         if order.is_paid is True:
             coin_package = order.coin_package
-            ct_amount = coin_package.amount if coin_package.discount == 0 else coin_package.discount
+            ct_amount = coin_package.amount if coin_package.amount_offer == 0 else coin_package.amount_offer
 
             # CoinTransaction.objects.create(
             #     page=page,

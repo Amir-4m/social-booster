@@ -3,6 +3,9 @@ import apps.orders.models as orders_model
 
 
 # Register your models here.
+from apps.orders.services import CustomService
+
+
 @admin.register(orders_model.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
@@ -17,4 +20,6 @@ class OrderAdmin(admin.ModelAdmin):
 class AllowedGatewayAdmin(admin.ModelAdmin):
     list_display = ('version_pattern', 'gateways_code')
     search_fields = ('version_name', 'gateways_code')
+
+
 
