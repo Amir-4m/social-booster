@@ -90,10 +90,6 @@ class Package(models.Model):
     def price_value(self):
         return self.price_offer or self.price
 
-    @property
-    def sku_value(self):
-        return self.sku if self.sku else None
-
     def __str__(self):
         return f"{self.name} {self.category.title}"
 

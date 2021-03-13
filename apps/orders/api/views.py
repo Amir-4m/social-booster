@@ -41,7 +41,7 @@ class OrderGateWayAPIView(views.APIView):
                     'service_reference': str(package_order.invoice_number),
                     'is_paid': package_order.is_paid,
                     "redirect_url": request.build_absolute_uri(reverse('payment-done')),
-                    "sku": package_order.package.sku_value,
+                    "sku": package_order.package.sku,
                     "package_name": settings.CAFE_BAZAAR_PACKAGE_NAME
                 }
             )
