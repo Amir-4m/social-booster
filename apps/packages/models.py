@@ -88,7 +88,7 @@ class Package(models.Model):
 
     @property
     def price_value(self):
-        return self.price_offer if self.price_offer else self.price
+        return self.price_offer or self.price
 
     @property
     def sku_value(self):
