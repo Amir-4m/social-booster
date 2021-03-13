@@ -54,8 +54,8 @@ class PackageCategory(models.Model):
                 "subs": cls.category_tree(cat)
             }
 
-            if not cat_dict["subs"]:
-                cat_dict["packages"] = Package.live().filter(categories=cat)[:3]
+            # if not cat_dict["subs"]:
+            #     cat_dict["packages"] = Package.objects.live().filter(categories=cat)
 
             cat_list.append(cat_dict)
 
@@ -78,14 +78,21 @@ class Package(models.Model):
     price = models.PositiveIntegerField(_('price'))
     price_offer = models.PositiveIntegerField(_('price offer'), null=True, blank=True)
     amount = models.PositiveIntegerField(_('amount'))
-    amount_offer = models.PositiveIntegerField(_('amount offer'), null=True, blank=True)
-    target_no = models.PositiveIntegerField(_("request number"))
+    description = models.TextField(_('description'), default="")
     sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)
     featured = models.DateTimeField(null=True, blank=True,
                                     help_text=_('if this date field is specified, the coin package will be featured until this date'))
     is_enable = models.BooleanField(default=True)
 
     objects = PackageManager()
+
+    @property
+    def price_value(self):
+        return self.price_offer if self.price_offer else self.price
+
+    @property
+    def sku_value(self):
+        return self.sku if self.sku else None
 
     def __str__(self):
         return f"{self.name} {self.category.title}"

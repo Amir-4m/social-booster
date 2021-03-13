@@ -22,6 +22,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class OrderGateWayAPIView(views.APIView):
+    # TODO cache should be added to all apis
     """Set an gateway for a package order to get the payment url"""
     permission_classes = (IsAuthenticated,)
 
@@ -30,18 +31,17 @@ class OrderGateWayAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         package_order = serializer.validated_data['package_order']
         gateway = serializer.validated_data['gateway']
-        sku = package_order.coin_package.sku if package_order.coin_package.sku is not None else None
         try:
             _r = CustomService.payment_request(
                 'orders',
                 'post',
                 data={
                     'gateway': gateway,
-                    'price': package_order.price,
+                    'price': package_order.package.price_value,
                     'service_reference': str(package_order.invoice_number),
                     'is_paid': package_order.is_paid,
                     "redirect_url": request.build_absolute_uri(reverse('payment-done')),
-                    "sku": sku,
+                    "sku": package_order.package.sku_value,
                     "package_name": settings.CAFE_BAZAAR_PACKAGE_NAME
                 }
             )
@@ -103,15 +103,8 @@ class PurchaseVerificationAPIView(views.APIView):
             order.save()
 
         if order.is_paid is True:
-            coin_package = order.coin_package
-            ct_amount = coin_package.amount if coin_package.amount_offer == 0 else coin_package.amount_offer
-
-            # CoinTransaction.objects.create(
-            #     page=page,
-            #     amount=ct_amount,
-            #     package=order,
-            #     transaction_type=CoinTransaction.TYPE_PURCHASE,
-            # )
+            # TODO : what we want to do on success payment
+            pass
         return Response({'purchase_verified': purchase_verified})
 
 
