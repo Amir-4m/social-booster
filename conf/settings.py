@@ -94,7 +94,10 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
-
+AUTHENTICATION_BACKENDS = (
+    'apps.accounts.backends.SMSBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
