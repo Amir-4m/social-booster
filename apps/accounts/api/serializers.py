@@ -76,6 +76,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class RelatedUserProfileInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', )
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         remove_fields = kwargs.pop('remove_fields', None)
@@ -87,10 +94,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name, None)
 
     has_password = serializers.SerializerMethodField()
+    user = RelatedUserProfileInfoSerializer(required=False)
 
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'gender', 'birth_date', 'email_address', 'has_password']
+        fields = ['user', 'avatar', 'gender', 'birth_date', 'email_address', 'has_password']
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
