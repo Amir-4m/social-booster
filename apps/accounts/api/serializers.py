@@ -84,21 +84,14 @@ class RelatedUserProfileInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        remove_fields = kwargs.pop('remove_fields', None)
-        super(UserProfileSerializer, self).__init__(*args, **kwargs)
-
-        if remove_fields:
-            # for multiple fields in a list
-            for field_name in remove_fields:
-                self.fields.pop(field_name, None)
 
     has_password = serializers.SerializerMethodField()
-    user = RelatedUserProfileInfoSerializer(required=False)
+    first_name = serializers.SerializerMethodField()
+    last_name = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        fields = ['user', 'avatar', 'gender', 'birth_date', 'email_address', 'has_password']
+        fields = ['first_name', 'last_name', 'avatar', 'gender', 'birth_date', 'email_address', 'has_password']
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
@@ -127,12 +120,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_has_password(self, obj):
         return obj.user.has_usable_password()
 
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
     def create(self, validated_data):
         user = validated_data.pop('user')
         instance, _created = UserProfile.objects.update_or_create(
             user=user,
             defaults=validated_data
         )
+        request = self.context.get("request")
+        instance.user.first_name = request.POST.get('first_name', instance.user.first_name)
+        instance.user.last_name = request.POST.get('last_name', instance.user.last_name)
+        instance.user.save()
         return instance
 
 
