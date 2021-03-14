@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 
 from rest_framework.generics import CreateAPIView
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -53,6 +53,7 @@ class RegisterAPIView(CreateAPIView):
 
 
 class ProfileViewSet(CreateModelMixin,
+                     ListModelMixin,
                      GenericViewSet):
     """
         Create or update  user's profile.
@@ -72,11 +73,9 @@ class ProfileViewSet(CreateModelMixin,
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    @action(detail=False, url_path='my-profile')
-    def my_profile(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         """
-        Return specific user's profile.
-
+            Return specific user's profile.
         """
         user = request.user
         profile, _created = UserProfile.objects.get_or_create(user=user)
