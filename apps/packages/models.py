@@ -91,7 +91,7 @@ class Package(models.Model):
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
     price = models.PositiveIntegerField(_('price'), null=True, blank=True)
     discount = models.PositiveSmallIntegerField(_("discount"), validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                help_text=_("Discount amount for package"), null=True, blank=True, default=None)
+                                                help_text=_("Discount amount for package"), blank=True, default=0)
     amount = models.PositiveIntegerField(_('amount'))
     description = models.TextField(_('description'), default="")
     sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)
