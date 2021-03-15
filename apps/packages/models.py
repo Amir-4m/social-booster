@@ -103,9 +103,9 @@ class Package(models.Model):
 
     @property
     def final_price(self):
-        if self.price and self.discount:
-            return self.price - (self.price * (self.discount/100))
-        return self.price or self.discount
+        if self.price is None:
+            return None
+        return int(self.price - (self.price * (self.discount/100)))
 
     def __str__(self):
         return f"{self.name} {self.category.title}"
