@@ -1,6 +1,6 @@
 from django.contrib.postgres.fields import IntegerRangeField
 from django.db import models
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -24,7 +24,7 @@ class PackageCategory(models.Model):
     parent = models.ForeignKey('self', verbose_name=_("parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
     description = models.TextField(_('description'), blank=True)
     sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
-    input_label = models.CharField(_('input label'), null=True, max_length=100,
+    input_label = models.CharField(_('input label'), blank=True, max_length=100,
                                    help_text=_("The label that is shown next to input user"))
     is_dynamic_price = models.BooleanField(_("is dynamic price"), default=False,
                                            help_text=_("Indicate that the category price should dynamically be calculated on the client side or not"))
@@ -90,7 +90,8 @@ class Package(models.Model):
     name = models.CharField(_("package name"), max_length=100)
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
     price = models.PositiveIntegerField(_('price'), null=True, blank=True)
-    price_offer = models.PositiveIntegerField(_('price offer'), null=True, blank=True)
+    discount = models.PositiveSmallIntegerField(_("discount"), validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                                help_text=_("Discount amount for package"), null=True, blank=True, default=None)
     amount = models.PositiveIntegerField(_('amount'))
     description = models.TextField(_('description'), default="")
     sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)
@@ -101,8 +102,10 @@ class Package(models.Model):
     objects = PackageManager()
 
     @property
-    def price_value(self):
-        return self.price_offer or self.price
+    def final_price(self):
+        if self.price and self.discount:
+            return self.price - (self.price * (self.discount/100))
+        return self.price or self.discount
 
     def __str__(self):
         return f"{self.name} {self.category.title}"

@@ -5,7 +5,7 @@ import apps.packages.models as package_models
 # Register your models here.
 @admin.register(package_models.Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'price_offer', 'created_time',
+    list_display = ['name', 'price', 'discount', 'final_price', 'created_time',
                     'updated_time', 'is_enable', ]
     search_fields = ['name', ]
     list_filter = ['category', ]
