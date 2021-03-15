@@ -72,7 +72,7 @@ class Package(models.Model):
 
     name = models.CharField(_("package name"), max_length=100)
     category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField(_('price'))
+    price = models.PositiveIntegerField(_('price'), null=True, blank=True)
     price_offer = models.PositiveIntegerField(_('price offer'), null=True, blank=True)
     amount = models.PositiveIntegerField(_('amount'))
     description = models.TextField(_('description'), default="")

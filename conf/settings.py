@@ -30,15 +30,18 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 DEVEL = config('DEVEL', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
-
+# This is used so that application data can hook into specific sites.
+SITE_ID = 1
 
 # Application definition
 INSTALLED_APPS = [
+    'apps.contents',
     'apps.accounts',
     'apps.packages',
     'apps.orders',
 
     'drf_yasg',
+    'tinymce',
     'rest_framework',
 
     'django.contrib.admin',
@@ -47,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages'
 ]
 
 MIDDLEWARE = [
@@ -137,8 +142,9 @@ CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='SOCIAL_BOOST')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = BASE_DIR / 'static'
+
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = config('MEDIA_URL', default='/media/')
