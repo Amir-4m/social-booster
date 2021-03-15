@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/v1/', include("apps.urls_api")),
     path('orders/', include("apps.orders.urls")),
     path('pages/', include('django.contrib.flatpages.urls')),
+    path('tinymce/', include('tinymce.urls')),
 ]
 
 if settings.DEVEL:
