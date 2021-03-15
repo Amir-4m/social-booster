@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import IntegerRangeField
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
@@ -23,6 +24,10 @@ class PackageCategory(models.Model):
     parent = models.ForeignKey('self', verbose_name=_("parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
     description = models.TextField(_('description'), blank=True)
     sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
+    input_label = models.CharField(_('input label'), null=True, max_length=100,
+                                   help_text=_("The label that is shown next to input user"))
+    is_dynamic_price = models.BooleanField(_("is dynamic price"), default=False,
+                                           help_text=_("Indicate that the category price should dynamically be calculated on the client side or not"))
     is_enable = models.BooleanField(_("is enable"), default=True)
     icon = models.ImageField(_("package Icon"), upload_to='categories_icon')
 
@@ -57,6 +62,18 @@ class PackageCategory(models.Model):
             cat_list.append(cat_dict)
 
         return cat_list
+
+
+class PackageCategoryIntervalPrice(models.Model):
+    created_time = models.DateField(_("created time"), auto_now_add=True)
+    updated_time = models.DateField(_("updated time"), auto_now=True)
+
+    category = models.ForeignKey(PackageCategory, verbose_name=_("category"), on_delete=models.CASCADE)
+    amount_interval = IntegerRangeField(_('the amount interval'))
+    price_per_interval = models.PositiveIntegerField(_('price'))
+
+    def __str__(self):
+        return f"{self.category.title} {self.amount_interval} -- {self.price_per_interval}"
 
 
 class PackageManager(models.Manager):

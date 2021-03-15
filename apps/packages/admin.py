@@ -20,5 +20,9 @@ class PackageCategoryAdmin(admin.ModelAdmin):
     autocomplete_fields = ('parent', )
 
 
+@admin.register(package_models.PackageCategoryIntervalPrice)
+class PackageCategoryIntervalPriceAdmin(admin.ModelAdmin):
+    list_filter = ['category', ]
+    search_fields = ['category__name', ]
 
 
