@@ -68,7 +68,7 @@ def filter_category_directory_path(instance, filename):
 
 def profile_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT /profiles/<profile's title-filename>
-    return f"profiles/{instance.first_name}-{filename}"
+    return f"profiles/{instance.user.first_name}-{filename}"
 
 maketrans = lambda A, B: dict((ord(a), b) for a, b in zip(A, B))
 number_converter = maketrans(
