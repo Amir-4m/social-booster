@@ -1,4 +1,6 @@
 import logging
+import random
+
 import requests
 
 from collections import defaultdict
@@ -135,4 +137,8 @@ class JalaliTimeMixin:
         if self.approved_time:
             return JalaliDatetime(self.approved_time).strftime('%C')
         return ''
+
+
+def get_telegram_members_count(link):
+    return random.randint(1000, 10000)
 
