@@ -13,7 +13,7 @@ class PackageAdmin(admin.ModelAdmin):
 
 @admin.register(package_models.PackageCategory)
 class PackageCategoryAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug", "sort_by", "parent", "created_time", "is_enable")
+    list_display = ("id", "title", "slug", "sort_by", "parent", "created_time", "is_enable")
     search_fields = ('title', 'slug')
     prepopulated_fields = {"slug": ("title",)}
     list_select_related = ('parent', )

@@ -139,6 +139,6 @@ class JalaliTimeMixin:
         return ''
 
 
-def get_telegram_members_count(link):
-    return random.randint(1000, 10000)
+def get_members_count_based_on_link(link):
+    return random.randint(100, 1000)
 

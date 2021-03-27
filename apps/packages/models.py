@@ -68,7 +68,7 @@ class PackageCategoryIntervalPrice(models.Model):
     created_time = models.DateField(_("created time"), auto_now_add=True)
     updated_time = models.DateField(_("updated time"), auto_now=True)
 
-    category = models.ForeignKey(PackageCategory, verbose_name=_("category"), on_delete=models.CASCADE)
+    category = models.ForeignKey(PackageCategory, verbose_name=_("category"), on_delete=models.CASCADE, related_name='intervals')
     amount_interval = IntegerRangeField(_('the amount interval'),
                                         help_text=_("the left input indicate the lower bound of interval and the right one show upper bound"))
     price_per_interval = models.PositiveIntegerField(_('price'), help_text=_("price for each interval, for example from 100 to 1000 has a price"))
@@ -89,7 +89,7 @@ class Package(models.Model):
     updated_time = models.DateField(_("updated time"), auto_now=True)
 
     name = models.CharField(_("package name"), max_length=100)
-    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE, related_name="packages")
     price = models.PositiveIntegerField(_('price'), null=True, blank=True)
     discount = models.PositiveSmallIntegerField(_("discount"), validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                 help_text=_("The discount percent for package value should be in [1, 100]"), default=0)
