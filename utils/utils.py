@@ -5,6 +5,7 @@ import requests
 
 from collections import defaultdict
 
+from bs4 import BeautifulSoup
 from django.core.cache import caches
 from django.conf import settings
 from django.contrib import admin
@@ -139,6 +140,22 @@ class JalaliTimeMixin:
         return ''
 
 
-def get_members_count_based_on_link(link):
-    return random.randint(100, 1000)
+def telegram_member_count(link):
+    """
+    link: argument format should be like --> 'https://t.me/varzesh3'
+    """
+    try:
+        page = requests.get(link, allow_redirects=False)
+        page.raise_for_status()
+        soup = BeautifulSoup(page.text, "html.parser")
+        members_soup = soup.find("div", class_="tgme_page_extra")
+        members_string_list = members_soup.get_text().split(" ")
+        for i in range(len(members_string_list)):
+            members_string_list[i] = members_string_list[i].replace(",", "")
+        members_index = members_string_list.index("members")
+        members_count = int(''.join(members_string_list[:members_index]))
+    except Exception as e:
+        members_count = 0
+        print(f"{link}   Exception occurred---->{str(e)}")
+    return members_count
 

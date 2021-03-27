@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from apps.packages.api.serializers import PackageCategorySerializer, PackageSerializer
 from apps.packages.models import PackageCategory
-from utils.utils import get_members_count_based_on_link
+from utils.utils import telegram_member_count
 
 
 class PackageCategoryViewSet(ListModelMixin,
@@ -31,7 +31,6 @@ class PackageCategoryViewSet(ListModelMixin,
 
     @action(methods=['get'], detail=True)
     def compute(self, request, *args, **kwargs):
-        # TODO : here the price of packages should be computed and it also needs a link in the query params
         # filter the queryset to be dynamic, if its not the Not found error will be shown
         self.queryset = self.queryset.filter(is_dynamic_price=True)
         category_objects = self.get_object()
@@ -40,7 +39,7 @@ class PackageCategoryViewSet(ListModelMixin,
         price_intervals = category_objects.intervals.values('amount_interval', 'price_per_interval')
 
         for package in serializer_data['packages']:
-            members_count = get_members_count_based_on_link(request.GET.get('link'))
+            members_count = telegram_member_count(request.GET.get('link'))
             suitable_interval_price = list(filter(lambda x: x['amount_interval'].lower <= members_count <= x['amount_interval'].upper,
                                                   price_intervals))[0]['price_per_interval']
             package['price'] = suitable_interval_price * members_count
