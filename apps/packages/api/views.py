@@ -1,3 +1,4 @@
+from django.core.validators import URLValidator
 from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -6,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django.utils.translation import ugettext_lazy as _
 from apps.packages.api.serializers import PackageCategorySerializer, PackageSerializer
-from apps.packages.models import PackageCategory
+from apps.packages.models import PackageCategory, Package, PackageCategoryIntervalPrice
 from utils.utils import telegram_member_count
 
 
@@ -33,27 +34,32 @@ class PackageCategoryViewSet(ListModelMixin,
     @action(methods=['get'], detail=True)
     def compute(self, request, *args, **kwargs):
         # filter the queryset to be dynamic, if its not the Not found error will be shown
-        self.queryset = self.queryset.filter(is_dynamic_price=True)
-        category_objects = self.get_object()
-        serializer_data = PackageCategorySerializer(category_objects).data
+        package_category = self.get_object()
+        if not package_category.is_dynamic_price:
+            raise ValidationError(_("This category does not support dynamic prices"))
+        packages = Package.objects.filter(category=package_category)
+        # validate and prepare the link
+        telegram_link = request.GET.get('link')
 
-        price_intervals = category_objects.intervals.values('amount_interval', 'price_per_interval')
+        # get members count for the given URL
+        try:
+            telegram_link = telegram_link.replace('/@', '/')
+            members_count = telegram_member_count(telegram_link)
+        except Exception as e:
+            print(f"{request.GET.get('link')}   Exception occurred---->{str(e)}")
+            raise ValidationError(_(f"{telegram_link}   is not a valid or accessible URL"))
 
-        for package in serializer_data['packages']:
-            members_count = telegram_member_count(request.GET.get('link'))
-            valid_interval_list = list(filter(lambda x: x['amount_interval'].lower <= members_count <= x['amount_interval'].upper,
-                                              price_intervals))
-            if len(valid_interval_list) > 0:
-                suitable_interval_price = valid_interval_list[0]['price_per_interval']
-                package['price'] = suitable_interval_price * members_count
-                if package['discount'] != 0:
-                    # the package final_price should be computed here if the discount is not 0
-                    package['final_price'] = int(package['price'] - (package['price'] * (package['discount']/100)))
-                else:
-                    package['final_price'] = package['price']
-            else:
-                raise ValidationError(_("There is no interval for the given value"))
+        # Fetch the related interval
+        try:
+            valid_interval = self.get_object().intervals.get(amount_interval__contains=members_count)
+        except PackageCategoryIntervalPrice.DoesNotExist:
+            raise ValidationError(_("No matching interval for the given member counts"))
 
-        return Response({'test': serializer_data})
+        # calculate dynamic prices
+        for package in packages:
+            package.price = valid_interval.price_per_interval * members_count
+
+        # return the result
+        return Response(PackageSerializer(packages, many=True).data)
 
 

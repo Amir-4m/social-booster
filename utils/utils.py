@@ -142,20 +142,16 @@ class JalaliTimeMixin:
 
 def telegram_member_count(link):
     """
-    link: argument format should be like --> 'https://t.me/varzesh3'
+        link: argument format should be like --> 'https://t.me/varzesh3'
     """
-    try:
-        page = requests.get(link, allow_redirects=False)
-        page.raise_for_status()
-        soup = BeautifulSoup(page.text, "html.parser")
-        members_soup = soup.find("div", class_="tgme_page_extra")
-        members_string_list = members_soup.get_text().split(" ")
-        for i in range(len(members_string_list)):
-            members_string_list[i] = members_string_list[i].replace(",", "")
-        members_index = members_string_list.index("members")
-        members_count = int(''.join(members_string_list[:members_index]))
-    except Exception as e:
-        members_count = 0
-        print(f"{link}   Exception occurred---->{str(e)}")
+    page = requests.get(link, allow_redirects=False)
+    page.raise_for_status()
+    soup = BeautifulSoup(page.text, "html.parser")
+    members_soup = soup.find("div", class_="tgme_page_extra")
+    members_string_list = members_soup.get_text().split(" ")
+    for i in range(len(members_string_list)):
+        members_string_list[i] = members_string_list[i].replace(",", "")
+    members_index = members_string_list.index("members")
+    members_count = int(''.join(members_string_list[:members_index]))
     return members_count
 
