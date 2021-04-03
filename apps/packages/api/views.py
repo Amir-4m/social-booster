@@ -39,21 +39,20 @@ class PackageCategoryViewSet(ListModelMixin,
             raise ValidationError(_("This category does not support dynamic prices"))
         packages = Package.objects.filter(category=package_category)
         # validate and prepare the link
-        telegram_link = request.GET.get('link')
+        link = request.GET.get('link')
 
         # get members count for the given URL
         try:
-            telegram_link = telegram_link.replace('/@', '/')
-            members_count = telegram_member_count(telegram_link)
+            link = link.replace('@', '')
+            members_count = telegram_member_count(link)
         except Exception as e:
-            print(f"{request.GET.get('link')}   Exception occurred---->{str(e)}")
-            raise ValidationError(_(f"{telegram_link}   is not a valid or accessible URL"))
+            raise ValidationError(_(f"{link} is not a valid or accessible URL"))
 
         # Fetch the related interval
         try:
             valid_interval = self.get_object().intervals.get(amount_interval__contains=members_count)
         except PackageCategoryIntervalPrice.DoesNotExist:
-            raise ValidationError(_("No matching interval for the given member counts"))
+            raise ValidationError(_(f"No matching interval for the given members count {members_count}"))
 
         # calculate dynamic prices
         for package in packages:
