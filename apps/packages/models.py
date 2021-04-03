@@ -68,9 +68,10 @@ class PackageCategoryIntervalPrice(models.Model):
     created_time = models.DateField(_("created time"), auto_now_add=True)
     updated_time = models.DateField(_("updated time"), auto_now=True)
 
-    category = models.ForeignKey(PackageCategory, verbose_name=_("category"), on_delete=models.CASCADE)
-    amount_interval = IntegerRangeField(_('the amount interval'))
-    price_per_interval = models.PositiveIntegerField(_('price'))
+    category = models.ForeignKey(PackageCategory, verbose_name=_("category"), on_delete=models.CASCADE, related_name='intervals')
+    amount_interval = IntegerRangeField(_('the amount interval'),
+                                        help_text=_("the left input indicate the lower bound of interval and the right one show upper bound"))
+    price_per_interval = models.PositiveIntegerField(_('price'), help_text=_("price for each interval, for example from 100 to 1000 has a price"))
 
     def __str__(self):
         return f"{self.category.title} {self.amount_interval} -- {self.price_per_interval}"
@@ -88,10 +89,10 @@ class Package(models.Model):
     updated_time = models.DateField(_("updated time"), auto_now=True)
 
     name = models.CharField(_("package name"), max_length=100)
-    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(PackageCategory, on_delete=models.CASCADE, related_name="packages")
     price = models.PositiveIntegerField(_('price'), null=True, blank=True)
     discount = models.PositiveSmallIntegerField(_("discount"), validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                help_text=_("Discount amount for package"), default=0)
+                                                help_text=_("The discount percent for package value should be in [1, 100]"), default=0)
     amount = models.PositiveIntegerField(_('amount'))
     description = models.TextField(_('description'), default="")
     sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)

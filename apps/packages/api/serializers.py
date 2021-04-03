@@ -7,7 +7,7 @@ class PackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Package
-        fields = ('id', 'name', 'price', 'discount', 'final_price', )
+        fields = ('id', 'name', 'amount', 'price', 'discount', 'final_price', )
 
 
 class PackageCategorySerializer(serializers.ModelSerializer):
