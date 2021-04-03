@@ -65,19 +65,19 @@ class PackageCategory(models.Model):
 
 
 class PackageCategoryForm(models.Model):
-    category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE,
-                                 related_name='values')
-    title = models.CharField(_("title"), max_length=150)
-    description = models.TextField(_("description"), blank=True)
-    STRING = "string"
-    INTEGER = "integer"
-    TEXT = "text"
+    TYPE_STRING = "str"
+    TYPE_INTEGER = "int"
+    TYPE_TEXT = "txt"
     VALUE_TYPE_CHOICES = [
         (STRING, _('string')),
         (INTEGER, _('integer')),
         (TEXT, _('text')),
     ]
-    value_type = models.CharField(_("value type"), max_length=20, choices=VALUE_TYPE_CHOICES)
+
+    category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE, related_name='values')
+    title = models.CharField(_("title"), max_length=150)
+    description = models.TextField(_("description"), blank=True)
+    value_type = models.CharField(_("value type"), max_length=3, choices=VALUE_TYPE_CHOICES)
     required = models.BooleanField(_("required"), default=False)
 
     def __str__(self):
