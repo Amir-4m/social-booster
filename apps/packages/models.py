@@ -64,6 +64,26 @@ class PackageCategory(models.Model):
         return cat_list
 
 
+class PackageCategoryForm(models.Model):
+    TYPE_STRING = "str"
+    TYPE_INTEGER = "int"
+    TYPE_TEXT = "txt"
+    VALUE_TYPE_CHOICES = [
+        (TYPE_STRING, _('string')),
+        (TYPE_INTEGER, _('integer')),
+        (TYPE_TEXT, _('text')),
+    ]
+
+    category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE, related_name='values')
+    title = models.CharField(_("title"), max_length=150)
+    description = models.TextField(_("description"), blank=True)
+    value_type = models.CharField(_("value type"), max_length=3, choices=VALUE_TYPE_CHOICES)
+    required = models.BooleanField(_("required"), default=False)
+
+    def __str__(self):
+        return f"title: {self.title}  value ty: {self.value_type}"
+
+
 class PackageCategoryIntervalPrice(models.Model):
     created_time = models.DateField(_("created time"), auto_now_add=True)
     updated_time = models.DateField(_("updated time"), auto_now=True)
