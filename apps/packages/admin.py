@@ -15,8 +15,8 @@ class PackageCategoryIntervalPriceInline(admin.TabularInline):
     model = package_models.PackageCategoryIntervalPrice
 
 
-class PackageCategoryDynamicValueInline(admin.TabularInline):
-    model = package_models.PackageCategoryDynamicValue
+class PackageCategoryFormInline(admin.TabularInline):
+    model = package_models.PackageCategoryForm
 
 
 @admin.register(package_models.PackageCategory)
@@ -26,7 +26,7 @@ class PackageCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_select_related = ('parent', )
     autocomplete_fields = ('parent', )
-    inlines = [PackageCategoryIntervalPriceInline, PackageCategoryDynamicValueInline, ]
+    inlines = [PackageCategoryIntervalPriceInline, PackageCategoryFormInline, ]
 
 
 @admin.register(package_models.PackageCategoryIntervalPrice)
@@ -35,8 +35,8 @@ class PackageCategoryIntervalPriceAdmin(admin.ModelAdmin):
     search_fields = ['category__name', ]
 
 
-@admin.register(package_models.PackageCategoryDynamicValue)
-class PackageCategoryDynamicValueAdmin(admin.ModelAdmin):
+@admin.register(package_models.PackageCategoryForm)
+class PackageCategoryFormAdmin(admin.ModelAdmin):
     list_display = ['title', 'value_type', 'required']
     list_filter = ['category', ]
     search_fields = ['category__name', ]
