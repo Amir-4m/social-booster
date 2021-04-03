@@ -22,7 +22,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class OrderGateWayAPIView(views.APIView):
-    # TODO cache should be added to all apis
     """Set an gateway for a package order to get the payment url"""
     permission_classes = (IsAuthenticated,)
 
@@ -54,6 +53,7 @@ class OrderGateWayAPIView(views.APIView):
                 logger.warning(f'could not fetch gateway for order {package_order.id}: {e}')
                 pass
             package_order.transaction_id = transaction_id
+            package_order.description = serializer.validated_data['description']
             package_order.save()
         except Exception as e:
             logger.error(f"error calling payment with endpoint orders and action post: {e}")
@@ -99,12 +99,10 @@ class PurchaseVerificationAPIView(views.APIView):
                     logger.error(f"error calling payment with endpoint purchase/verify and action post: {e}")
                     raise ValidationError(detail={'detail': _('error in verifying purchase')})
 
+            # the order is_paid is set here
             order.is_paid = purchase_verified
             order.save()
 
-        if order.is_paid is True:
-            # TODO : what we want to do on success payment
-            pass
         return Response({'purchase_verified': purchase_verified})
 
 

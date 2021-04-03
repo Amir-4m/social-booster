@@ -16,7 +16,10 @@ class Order(models.Model):
     gateway = models.CharField(_('gateway'), max_length=50, blank=True, db_index=True)
     invoice_number = models.UUIDField(_('uuid'), unique=True, default=uuid.uuid4, editable=False)
     transaction_id = models.CharField(_('transaction id'), unique=True, null=True, max_length=40)
-    is_paid = models.BooleanField(_("is paid"), null=True)
+    is_paid = models.BooleanField(_("is paid"), null=True, editable=False)
+    is_done = models.BooleanField(_("is done"), default=False)
+
+    description = models.TextField(_("description"), default=None)
     price = models.PositiveIntegerField(_('price'))
     version_name = models.CharField(_('version name'), max_length=50)
     redirect_url = models.CharField(_('redirect url'), max_length=120)

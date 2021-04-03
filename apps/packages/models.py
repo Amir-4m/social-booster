@@ -24,7 +24,7 @@ class PackageCategory(models.Model):
     parent = models.ForeignKey('self', verbose_name=_("parent"), blank=True, null=True, on_delete=models.CASCADE, related_name="children")
     description = models.TextField(_('description'), blank=True)
     sort_by = models.PositiveSmallIntegerField(_('sort'), default=0)
-    input_label = models.CharField(_('input label'), blank=True, max_length=100,
+    input_label = models.CharField(_('input label'), null=True, max_length=100,
                                    help_text=_("The label that is shown next to input user"))
     is_dynamic_price = models.BooleanField(_("is dynamic price"), default=False,
                                            help_text=_("Indicate that the category price should dynamically be calculated on the client side or not"))
@@ -62,6 +62,26 @@ class PackageCategory(models.Model):
             cat_list.append(cat_dict)
 
         return cat_list
+
+
+class PackageCategoryDynamicValue(models.Model):
+    category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE,
+                                 related_name='values')
+    title = models.CharField(_("title"), max_length=150)
+    description = models.TextField(_("description"), default=None)
+    STRING = "string"
+    INTEGER = "integer"
+    TEXT = "text"
+    value_type_choices = (
+        (1, STRING),
+        (2, INTEGER),
+        (3, TEXT),
+    )
+    value_type = models.SmallIntegerField(_("value type"), choices=value_type_choices)
+    required = models.BooleanField(_("required"), default=False)
+
+    def __str__(self):
+        return f"title: {self.title}  value ty: {self.value_type}"
 
 
 class PackageCategoryIntervalPrice(models.Model):

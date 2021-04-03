@@ -13,6 +13,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
+    description = serializers.CharField(required=True)
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
