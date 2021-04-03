@@ -69,9 +69,9 @@ class PackageCategoryForm(models.Model):
     TYPE_INTEGER = "int"
     TYPE_TEXT = "txt"
     VALUE_TYPE_CHOICES = [
-        (STRING, _('string')),
-        (INTEGER, _('integer')),
-        (TEXT, _('text')),
+        (TYPE_STRING, _('string')),
+        (TYPE_INTEGER, _('integer')),
+        (TYPE_TEXT, _('text')),
     ]
 
     category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE, related_name='values')
