@@ -50,7 +50,7 @@ class PackageCategoryViewSet(ListModelMixin,
 
         # Fetch the related interval
         try:
-            valid_interval = self.get_object().intervals.get(amount_interval__contains=members_count)
+            valid_interval = package_category.intervals.get(amount_interval__contains=members_count)
         except PackageCategoryIntervalPrice.DoesNotExist:
             raise ValidationError(_(f"No matching interval for the given members count {members_count}"))
 
