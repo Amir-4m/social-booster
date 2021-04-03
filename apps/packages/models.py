@@ -123,10 +123,15 @@ class Package(models.Model):
     objects = PackageManager()
 
     @property
+<<<<<<< Updated upstream
     def final_price(self):
         if self.price is None:
             return None
         return int(self.price - (self.price * (self.discount/100)))
+=======
+    def price_value(self):
+        return self.price_offer if self.price_offer else self.price
+>>>>>>> Stashed changes
 
     def __str__(self):
         return f"{self.name} {self.category.title}"
