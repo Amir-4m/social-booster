@@ -19,7 +19,7 @@ class Order(models.Model):
     is_paid = models.BooleanField(_("is paid"), null=True, editable=False)
     is_done = models.BooleanField(_("is done"), default=False)
 
-    description = models.TextField(_("description"), blank=None)
+    description = models.TextField(_("description"), blank=True)
     price = models.PositiveIntegerField(_('price'))
     version_name = models.CharField(_('version name'), max_length=50)
     redirect_url = models.CharField(_('redirect url'), max_length=120)
