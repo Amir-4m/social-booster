@@ -8,20 +8,27 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
-from apps.orders.api.serializers import OrderSerializer, OrderGatewaySerializer, PurchaseSerializer
-from apps.orders.models import Order, AllowedGateway
-from apps.orders.services import CustomService
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from apps.payments.api.serializers import OrderSerializer, OrderGatewaySerializer, PurchaseSerializer
+from apps.payments.models import Order, AllowedGateway
+from apps.payments.services import CustomService
 
 logger = logging.getLogger(__name__)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    authentication_classes = (JWTAuthentication, )
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class OrderGateWayAPIView(views.APIView):
+    authentication_classes = (JWTAuthentication,)
     """Set an gateway for a package order to get the payment url"""
     permission_classes = (IsAuthenticated,)
 
@@ -53,7 +60,6 @@ class OrderGateWayAPIView(views.APIView):
                 logger.warning(f'could not fetch gateway for order {package_order.id}: {e}')
                 pass
             package_order.transaction_id = transaction_id
-            package_order.description = serializer.validated_data['description']
             package_order.save()
         except Exception as e:
             logger.error(f"error calling payment with endpoint orders and action post: {e}")
@@ -73,6 +79,7 @@ class OrderGateWayAPIView(views.APIView):
 
 
 class PurchaseVerificationAPIView(views.APIView):
+    authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -106,18 +113,4 @@ class PurchaseVerificationAPIView(views.APIView):
         return Response({'purchase_verified': purchase_verified})
 
 
-class GatewayAPIView(views.APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        version_name = request.query_params.get('version_name')
-        if version_name is None:
-            raise ValidationError(detail={'detail': _('version must be set in query params!')})
-        try:
-            gateways_list = list(AllowedGateway.get_gateways_by_version_name(version_name))
-        except Exception as e:
-            logger.error(f"error in getting gateways list: {e}")
-            gateways_list = []
-
-        return Response(gateways_list)
 

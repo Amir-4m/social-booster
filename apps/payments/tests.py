@@ -9,7 +9,7 @@ from django.test import TestCase
 # Create your tests here.
 from rest_framework.test import APITestCase
 
-from apps.orders.models import AllowedGateway
+from apps.payments.models import AllowedGateway
 from apps.packages.models import Package, PackageCategory
 from utils.test_utils import rand_string
 

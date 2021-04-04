@@ -1,26 +1,41 @@
+import logging
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from apps.orders.models import Order
+from apps.payments.models import Order, AllowedGateway
+
+logger = logging.getLogger(__name__)
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    gateways = serializers.SerializerMethodField(read_only=True)
+
+    def get_gateways(self, obj):
+        gateways_list = []
+        if self.context['view'].action != 'create':
+            return gateways_list
+
+        try:
+            gateways_list = list(AllowedGateway.get_gateways_by_version_name(obj.version_name))
+        except Exception as e:
+            logger.error(f"getting gateways list failed in creating package order: {e}")
+        return gateways_list
 
     class Meta:
         model = Order
-        fields = '__all__'
+        exclude = ('owner', )
+        extra_kwargs = {'extras': {'write_only': True}}
 
 
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
-    description = serializers.CharField()
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
 
     def update(self, instance, validated_data):
-        raise NotImplementedError('`update()` must be implemented.')
+        pass
 
 
 class PurchaseSerializer(serializers.Serializer):
@@ -36,6 +51,9 @@ class PurchaseSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
+
+    def update(self, instance, validated_data):
+        pass
 
 

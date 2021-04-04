@@ -10,3 +10,4 @@ python-decouple ~= 3.3
 PyJWT==1.7.1
 django-tinymce ~= 3.2
 bs4 ~= 0.0.1
+django-json-widget ~= 1.1.0
