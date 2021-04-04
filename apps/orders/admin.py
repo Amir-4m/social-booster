@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.db import models
+from django_json_widget.widgets import JSONEditorWidget
+
 import apps.orders.models as orders_model
 
 
@@ -8,6 +11,9 @@ from apps.orders.services import CustomService
 
 @admin.register(orders_model.Order)
 class OrderAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.JSONField: {'widget': JSONEditorWidget},
+    }
     list_display = (
         'price', 'invoice_number',
         'gateway', 'is_paid', 'updated_time', 'created_time'
