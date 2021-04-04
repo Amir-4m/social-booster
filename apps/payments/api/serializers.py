@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from apps.orders.models import Order
+from apps.payments.models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):

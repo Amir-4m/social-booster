@@ -20,7 +20,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('accounts/', include("apps.accounts.api.urls")),
-    path('orders/', include("apps.orders.api.urls")),
+    path('payments/', include("apps.payments.api.urls")),
     path('packages/', include("apps.packages.api.urls")),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # path('v1/docs/', schema_view),

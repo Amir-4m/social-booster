@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
 
-import apps.orders.models as orders_model
+import apps.payments.models as orders_model
 
 
 # Register your models here.
-from apps.orders.services import CustomService
+from apps.payments.services import CustomService
 
 
 @admin.register(orders_model.Order)

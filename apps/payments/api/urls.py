@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from apps.orders.api.views import OrderViewSet, OrderGateWayAPIView, GatewayAPIView, PurchaseVerificationAPIView
+from apps.payments.api.views import OrderViewSet, OrderGateWayAPIView, GatewayAPIView, PurchaseVerificationAPIView
 
 router = routers.SimpleRouter()
 router.register(r'orders', OrderViewSet, basename='orders')
