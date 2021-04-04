@@ -2,14 +2,14 @@ from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
 
-import apps.payments.models as orders_model
+from apps.payments.models import Order, AllowedGateway
 
 
 # Register your models here.
 from apps.payments.services import CustomService
 
 
-@admin.register(orders_model.Order)
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},
@@ -22,7 +22,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('owner__username', )
 
 
-@admin.register(orders_model.AllowedGateway)
+@admin.register(AllowedGateway)
 class AllowedGatewayAdmin(admin.ModelAdmin):
     list_display = ('version_pattern', 'gateways_code')
     search_fields = ('version_name', 'gateways_code')

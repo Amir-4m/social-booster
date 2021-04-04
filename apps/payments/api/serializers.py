@@ -19,10 +19,10 @@ class OrderGatewaySerializer(serializers.Serializer):
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
 
     def update(self, instance, validated_data):
-        raise NotImplementedError('`update()` must be implemented.')
+        pass
 
 
 class PurchaseSerializer(serializers.Serializer):
@@ -38,9 +38,9 @@ class PurchaseSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
 
     def update(self, instance, validated_data):
-        raise NotImplementedError('`update()` must be implemented.')
+        pass
 
 
