@@ -15,7 +15,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
     description = serializers.CharField()
-    extras = serializers.JSONField(required=False, default=dict)
+    extras = serializers.JSONField(required=False)
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
