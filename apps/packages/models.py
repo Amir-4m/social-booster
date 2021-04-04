@@ -76,12 +76,16 @@ class PackageCategoryForm(models.Model):
 
     category = models.ForeignKey(PackageCategory, verbose_name=_("related category"), on_delete=models.CASCADE, related_name='values')
     title = models.CharField(_("title"), max_length=150)
+    key = models.SlugField(_("key"), max_length=150, blank=True)
     description = models.TextField(_("description"), blank=True)
     value_type = models.CharField(_("value type"), max_length=3, choices=VALUE_TYPE_CHOICES)
     required = models.BooleanField(_("required"), default=False)
 
     def __str__(self):
         return f"title: {self.title}  value ty: {self.value_type}"
+    # TODO : this part should be added and blank=True should be removed from key
+    # class Meta:
+    #     unique_together = ('category', 'key', )
 
 
 class PackageCategoryIntervalPrice(models.Model):

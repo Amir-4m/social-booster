@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse
 from django.views import View
 
 from apps.payments.services import CustomService
@@ -18,5 +19,5 @@ class SyncGatewayView(View):
             cache.set("gateways", data, None)
             gateways = cache.get("gateways", [])
             messages.success(request, _(f"{len(gateways)} gateways are added"))
-        return redirect('/admin52f930/payments/allowedgateway/')
+        return redirect(reverse('admin:payments_allowedgateway_changelist'))
 
