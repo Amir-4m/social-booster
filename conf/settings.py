@@ -66,6 +66,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'conf.urls'
+APPEND_SLASH = False
 
 TEMPLATES = [
     {
