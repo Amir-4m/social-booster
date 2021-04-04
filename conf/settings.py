@@ -131,15 +131,13 @@ USE_L10N = False
 USE_TZ = False
 
 # cache settings for Django
-CACHE_KEY_PREFIX = config('CACHE_PREFIX', default='SOCIAL_BOOST')
-# CACHES = {
-#     'default': {
-#         'BACKEND': config('CACHE_BACKEND'),
-#         'LOCATION': config('CACHE_LOCATION'),
-#         'KEY_PREFIX': CACHE_KEY_PREFIX,
-#         'TIMEOUT': None,
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': config('CACHE_BACKEND', default='django.core.cache.backends.locmem.LocMemCache'),
+        'LOCATION': config('CACHE_HOST', default=''),
+        'KEY_PREFIX': 'SOCIAL_BOOST',
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
