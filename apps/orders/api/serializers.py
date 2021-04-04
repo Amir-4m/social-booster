@@ -9,11 +9,13 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        extra_kwargs = {'extras': {'write_only': True}}
 
 
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
     description = serializers.CharField()
+    extras = serializers.JSONField(required=False, default=dict)
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
@@ -37,5 +39,8 @@ class PurchaseSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         raise NotImplementedError('`create()` must be implemented.')
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError('`update()` must be implemented.')
 
 
