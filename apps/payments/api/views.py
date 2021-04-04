@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from apps.payments.api.serializers import OrderSerializer, OrderGatewaySerializer, PurchaseSerializer
 from apps.payments.models import Order, AllowedGateway
 from apps.payments.services import CustomService
@@ -16,12 +18,14 @@ logger = logging.getLogger(__name__)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    authentication_classes = (JWTAuthentication, )
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
 
 
 class OrderGateWayAPIView(views.APIView):
+    authentication_classes = (JWTAuthentication,)
     """Set an gateway for a package order to get the payment url"""
     permission_classes = (IsAuthenticated,)
 
@@ -74,6 +78,7 @@ class OrderGateWayAPIView(views.APIView):
 
 
 class PurchaseVerificationAPIView(views.APIView):
+    authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -108,6 +113,7 @@ class PurchaseVerificationAPIView(views.APIView):
 
 
 class GatewayAPIView(views.APIView):
+    authentication_classes = (JWTAuthentication, )
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
