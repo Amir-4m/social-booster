@@ -18,5 +18,5 @@ class SyncGatewayView(View):
             cache.set("gateways", data, None)
             gateways = cache.get("gateways", [])
             messages.success(request, _(f"{len(gateways)} gateways are added"))
-        return redirect('/admin52f930/orders/allowedgateway/')
+        return redirect('/admin52f930/payments/allowedgateway/')
 
