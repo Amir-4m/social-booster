@@ -161,6 +161,9 @@ REST_FRAMEWORK = {
         'free_register': '5/hour',
         'forgot-password': '1/minute',
     },
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 SIMPLE_JWT = {
