@@ -1,9 +1,8 @@
 from django.contrib import admin
-import apps.packages.models as package_models
+from apps.packages.models import Package, PackageCategory, PackageCategoryIntervalPrice, PackageCategoryForm
 
 
-# Register your models here.
-@admin.register(package_models.Package)
+@admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'discount', 'final_price', 'created_time', 'updated_time', 'is_enable', ]
     search_fields = ['name', ]
@@ -11,14 +10,16 @@ class PackageAdmin(admin.ModelAdmin):
 
 
 class PackageCategoryIntervalPriceInline(admin.TabularInline):
-    model = package_models.PackageCategoryIntervalPrice
+    model = PackageCategoryIntervalPrice
+    extra = 1
 
 
 class PackageCategoryFormInline(admin.TabularInline):
-    model = package_models.PackageCategoryForm
+    model = PackageCategoryForm
+    extra = 1
 
 
-@admin.register(package_models.PackageCategory)
+@admin.register(PackageCategory)
 class PackageCategoryAdmin(admin.ModelAdmin):
     list_display = ("title", "id",  "slug", "sort_by", "parent", "created_time", "is_enable")
     search_fields = ('title', 'slug')

@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'apps.contents',
     'apps.accounts',
     'apps.packages',
-    'apps.orders',
+    'apps.payments',
 
     'drf_yasg',
     'tinymce',
     'rest_framework',
+    'django_json_widget',
 
     'django.contrib.admin',
     'django.contrib.auth',

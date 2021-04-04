@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from apps.orders.models import Order
+from apps.payments.models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -9,18 +9,20 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        extra_kwargs = {'extras': {'write_only': True}}
 
 
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
     description = serializers.CharField()
+    extras = serializers.JSONField(required=False)
     package_order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(is_paid=None))
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
 
     def update(self, instance, validated_data):
-        raise NotImplementedError('`update()` must be implemented.')
+        pass
 
 
 class PurchaseSerializer(serializers.Serializer):
@@ -36,6 +38,9 @@ class PurchaseSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        raise NotImplementedError('`create()` must be implemented.')
+        pass
+
+    def update(self, instance, validated_data):
+        pass
 
 

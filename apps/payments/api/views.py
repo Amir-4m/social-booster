@@ -8,9 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
-from apps.orders.api.serializers import OrderSerializer, OrderGatewaySerializer, PurchaseSerializer
-from apps.orders.models import Order, AllowedGateway
-from apps.orders.services import CustomService
+from apps.payments.api.serializers import OrderSerializer, OrderGatewaySerializer, PurchaseSerializer
+from apps.payments.models import Order, AllowedGateway
+from apps.payments.services import CustomService
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +54,7 @@ class OrderGateWayAPIView(views.APIView):
                 pass
             package_order.transaction_id = transaction_id
             package_order.description = serializer.validated_data['description']
+            package_order.extras = serializer.validated_data['extras']
             package_order.save()
         except Exception as e:
             logger.error(f"error calling payment with endpoint orders and action post: {e}")

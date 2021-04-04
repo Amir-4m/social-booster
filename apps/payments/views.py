@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
 
-from apps.orders.services import CustomService
+from apps.payments.services import CustomService
 from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
 

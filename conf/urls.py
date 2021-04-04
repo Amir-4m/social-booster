@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin52f930/', admin.site.urls),
     # API views
     path('api/v1/', include("apps.urls_api")),
-    path('orders/', include("apps.orders.urls")),
+    path('orders/', include("apps.payments.urls")),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('tinymce/', include('tinymce.urls')),
 ]
