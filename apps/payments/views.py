@@ -19,8 +19,7 @@ class SyncGatewayView(View):
         if request.user.is_superuser:
             data = CustomService.payment_request('gateways', 'get')
             cache.set("gateways", data, None)
-            gateways = cache.get("gateways", [])
-            messages.success(request, _(f"{len(gateways)} gateways are added"))
+            messages.success(request, _(f"{len(data)} gateways are added"))
         return redirect(reverse('admin:payments_allowedgateway_changelist'))
 
 

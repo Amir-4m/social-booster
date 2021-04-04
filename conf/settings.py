@@ -137,16 +137,7 @@ CACHES = {
         'LOCATION': config('CACHE_HOST', default=''),
         'KEY_PREFIX': 'SOCIAL_BOOST',
     },
-
 }
-# CACHES = {
-#     'default': {
-#         'BACKEND': config('CACHE_BACKEND'),
-#         'LOCATION': config('CACHE_LOCATION'),
-#         'KEY_PREFIX': CACHE_KEY_PREFIX,
-#         'TIMEOUT': None,
-#     }
-# }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
