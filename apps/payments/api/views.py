@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class OrderViewSet(viewsets.ModelViewSet):
     authentication_classes = (JWTAuthentication, )
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(is_paid=True)
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
 
