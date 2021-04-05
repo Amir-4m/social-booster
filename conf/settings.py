@@ -226,15 +226,10 @@ LOGGING = ({
             'handlers': ['db_queries'],
             'propagate': False,
         },
-        'apps.instagram_app': {
+        'apps': {
             'level': 'DEBUG',
             'handlers': ['file', 'console']
         },
-        'apps.reward': {
-            'level': 'DEBUG',
-            'handlers': ['file', 'console']
-        },
-
     },
 })
 
