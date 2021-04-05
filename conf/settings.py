@@ -177,3 +177,65 @@ SMS_GATE_WAY_TOKEN = config('SMS_GATE_WAY_TOKEN', default='')
 VERIFY_CODE_MIN = config('VERIFY_CODE_MIN', cast=int, default=10000)
 VERIFY_CODE_MAX = config('VERIFY_CODE_MAX', cast=int, default=99999)
 
+
+LOG_DIR = BASE_DIR / 'logs'
+LOGGING = ({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose' if DEBUG else 'simple',
+            'filename': LOG_DIR / 'django.log',
+        },
+        'db_queries': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'filename': LOG_DIR / 'db_queries.log',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['db_queries'],
+            'propagate': False,
+        },
+        'apps.instagram_app': {
+            'level': 'DEBUG',
+            'handlers': ['file', 'console']
+        },
+        'apps.reward': {
+            'level': 'DEBUG',
+            'handlers': ['file', 'console']
+        },
+
+    },
+})
+
+
