@@ -43,7 +43,7 @@ class OrderGateWayAPIView(views.APIView):
                 'post',
                 data={
                     'gateway': gateway,
-                    'price': package_order.package.price_value,
+                    'price': package_order.package.final_price,
                     'service_reference': str(package_order.invoice_number),
                     'is_paid': package_order.is_paid,
                     "redirect_url": request.build_absolute_uri(reverse('payment-done')),
