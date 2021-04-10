@@ -37,33 +37,47 @@ class OrderGateWayAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         package_order = serializer.validated_data['package_order']
         gateway = serializer.validated_data['gateway']
+        code = ''
+
+        for gw in AllowedGateway.get_gateways_by_version_name(package_order.version_name):
+            if gw['id'] == gateway:
+                package_order.gateway = gw['display_name']
+                code = gw['code']
+                break
+
+        if not code:
+            raise ValidationError(detail={'detail': _('no gateway has been found.')})
+
+        data = {
+            'gateway': gateway,
+            'price': package_order.package.final_price,
+            'service_reference': str(package_order.invoice_number),
+            'is_paid': package_order.is_paid,
+            'redirect_url': request.build_absolute_uri(reverse('payment-done')),
+        }
+
+        if code == 'BAZAAR':
+            if not package_order.package.sku:
+                raise ValidationError(detail={'detail': _('package has no sku.')})
+
+            data.update({
+                'sku': package_order.package.sku,
+                'package_name': settings.CAFE_BAZAAR_PACKAGE_NAME
+            })
+
         try:
             _r = CustomService.payment_request(
                 'orders',
                 'post',
-                data={
-                    'gateway': gateway,
-                    'price': package_order.package.final_price,
-                    'service_reference': str(package_order.invoice_number),
-                    'is_paid': package_order.is_paid,
-                    "redirect_url": request.build_absolute_uri(reverse('payment-done')),
-                    "sku": package_order.package.sku,
-                    "package_name": settings.CAFE_BAZAAR_PACKAGE_NAME
-                }
+                data=data
             )
             transaction_id = _r.get('transaction_id')
-            try:
-                for gw in list(AllowedGateway.get_gateways_by_version_name(package_order.version_name)):
-                    if gw['id'] == gateway:
-                        package_order.gateway = gw['display_name']
-            except Exception as e:
-                logger.warning(f'could not fetch gateway for order {package_order.id}: {e}')
-                pass
-            package_order.transaction_id = transaction_id
-            package_order.save()
         except Exception as e:
             logger.error(f"error calling payment with endpoint orders and action post: {e}")
             raise ValidationError(detail={'detail': _('error in submitting order gateway')})
+
+        package_order.transaction_id = transaction_id
+        package_order.save()
 
         try:
             response = CustomService.payment_request(
