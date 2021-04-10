@@ -15,10 +15,7 @@ class OrderSerializer(serializers.ModelSerializer):
         if self.context['view'].action != 'create':
             return gateways_list
 
-        try:
-            gateways_list = list(AllowedGateway.get_gateways_by_version_name(obj.version_name))
-        except Exception as e:
-            logger.error(f"getting gateways list failed in creating package order: {e}")
+        gateways_list = AllowedGateway.get_gateways_by_version_name(obj.version_name)
         return gateways_list
 
     class Meta:
