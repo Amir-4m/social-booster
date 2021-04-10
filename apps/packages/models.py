@@ -119,7 +119,7 @@ class Package(models.Model):
                                                 help_text=_("The discount percent for package value should be in [1, 100]"), default=0)
     amount = models.PositiveIntegerField(_('amount'))
     description = models.TextField(_('description'), default="")
-    sku = models.CharField(_('package sku'), max_length=40, unique=True, null=True)
+    sku = models.CharField(_('package sku'), max_length=40, blank=True)
     featured = models.DateTimeField(null=True, blank=True,
                                     help_text=_('if this date field is specified, the coin package will be featured until this date'))
     is_enable = models.BooleanField(default=True)
