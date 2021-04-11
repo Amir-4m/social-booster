@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 class OrderViewSet(viewsets.ModelViewSet):
     authentication_classes = (JWTAuthentication, )
-    queryset = Order.objects.filter(is_paid=True)
+    queryset = Order.objects.filter(is_paid=True).select_related('package')
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
     pagination_class = OrderPagination

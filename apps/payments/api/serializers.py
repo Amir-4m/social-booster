@@ -2,6 +2,8 @@ import logging
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+
+from apps.packages.api.serializers import PackageSerializer
 from apps.payments.models import Order, AllowedGateway
 
 logger = logging.getLogger(__name__)
@@ -9,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class OrderSerializer(serializers.ModelSerializer):
     gateways = serializers.SerializerMethodField(read_only=True)
+    package = PackageSerializer(many=False)
 
     def get_gateways(self, obj):
         gateways_list = []
