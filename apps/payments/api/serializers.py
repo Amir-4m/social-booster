@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class OrderSerializer(serializers.ModelSerializer):
     gateways = serializers.SerializerMethodField(read_only=True)
-    package = PackageSerializer(many=False)
+    package = PackageSerializer(read_only=True)
 
     def get_gateways(self, obj):
         gateways_list = []
