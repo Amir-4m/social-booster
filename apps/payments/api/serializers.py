@@ -11,7 +11,12 @@ logger = logging.getLogger(__name__)
 
 class OrderSerializer(serializers.ModelSerializer):
     gateways = serializers.SerializerMethodField(read_only=True)
-    package = PackageSerializer(read_only=True)
+    package_detail = PackageSerializer(read_only=True)
+
+    class Meta:
+        model = Order
+        exclude = ('owner', )
+        extra_kwargs = {'extras': {'write_only': True}}
 
     def get_gateways(self, obj):
         gateways_list = []
@@ -20,11 +25,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
         gateways_list = AllowedGateway.get_gateways_by_version_name(obj.version_name)
         return gateways_list
-
-    class Meta:
-        model = Order
-        exclude = ('owner', )
-        extra_kwargs = {'extras': {'write_only': True}}
 
 
 class OrderGatewaySerializer(serializers.Serializer):
