@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class OrderSerializer(serializers.ModelSerializer):
     gateways = serializers.SerializerMethodField(read_only=True)
-    package_detail = PackageSerializer(read_only=True)
+    package_detail = PackageSerializer(source='package', read_only=True)
 
     class Meta:
         model = Order
