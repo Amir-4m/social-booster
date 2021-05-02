@@ -124,7 +124,6 @@ class Package(models.Model):
                                     help_text=_('if this date field is specified, the coin package will be featured until this date'))
 
     banner_image = models.ImageField(_("banner image"), upload_to='package_banner', blank=True)
-    is_featured = models.BooleanField(default=False)
     is_enable = models.BooleanField(default=True)
 
     objects = PackageManager()
