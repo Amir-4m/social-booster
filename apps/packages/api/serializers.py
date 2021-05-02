@@ -3,6 +3,12 @@ from rest_framework import serializers
 from apps.packages.models import Package, PackageCategory, PackageCategoryForm
 
 
+class PackageSliderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Package
+        fields = ('category_id', 'banner_image')
+
 class PackageSerializer(serializers.ModelSerializer):
 
     class Meta:

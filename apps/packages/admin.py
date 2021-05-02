@@ -1,10 +1,29 @@
+from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 from django.contrib import admin
+from django.forms import ModelForm
 from apps.packages.models import Package, PackageCategory, PackageCategoryIntervalPrice, PackageCategoryForm
 
 
+class PackageAdminForm(ModelForm):
+
+    class Meta:
+        model = Package
+        exclude = ['updated_time', 'created_time']
+
+    def clean_is_featured(self):
+        is_featured = self.cleaned_data['is_featured']
+        banner = self.cleaned_data['banner_image']
+        featured = self.cleaned_data['featured']
+
+        if is_featured and not banner or not featured:
+            raise ValidationError(_('featured package should have a banner image and featured date.'))
+        return is_featured
+
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable', ]
+    form = PackageAdminForm
+    list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable', 'is_featured']
     search_fields = ['name', ]
     list_filter = ['category', ]
 
