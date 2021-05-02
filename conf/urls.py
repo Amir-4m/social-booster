@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework.documentation import include_docs_urls
 
 from django.conf import settings
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path('orders/', include("apps.payments.urls")),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('tinymce/', include('tinymce.urls')),
+
+    path('docs/', include_docs_urls(title='Social Booster')),
 ]
 
 if settings.DEVEL:

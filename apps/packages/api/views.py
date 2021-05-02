@@ -62,6 +62,9 @@ class PackageCategoryViewSet(ListModelMixin,
 
     @action(methods=['get'], detail=False, serializer_class=PackageSliderSerializer)
     def sliders(self, request, *args, **kwargs):
+        """Sliders
+            category_id and banner_image of Packages that are featured
+        """
         data = Package.objects.filter(
             is_featured=True,
             featured__gte=timezone.now()
