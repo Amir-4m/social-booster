@@ -4,6 +4,7 @@ python-decouple
 psycopg2-binary
 Pillow
 pymemcache
+coreapi==2.3.3
 
 drf-yasg ~= 1.20
 Khayyam ~= 3.0
