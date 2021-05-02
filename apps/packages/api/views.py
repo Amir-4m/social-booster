@@ -66,7 +66,6 @@ class PackageCategoryViewSet(ListModelMixin,
             category_id and banner_image of Packages that are featured
         """
         data = Package.objects.filter(
-            is_featured=True,
             featured__gte=timezone.now()
         )
         serializer = self.get_serializer(data, many=True)

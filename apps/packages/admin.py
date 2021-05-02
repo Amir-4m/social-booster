@@ -11,19 +11,18 @@ class PackageAdminForm(ModelForm):
         model = Package
         exclude = ['updated_time', 'created_time']
 
-    def clean_is_featured(self):
-        is_featured = self.cleaned_data['is_featured']
-        banner = self.cleaned_data['banner_image']
+    def clean_featured(self):
+        banner = self.files.get('banner_image')
         featured = self.cleaned_data['featured']
 
-        if is_featured and not banner or not featured:
-            raise ValidationError(_('featured package should have a banner image and featured date.'))
-        return is_featured
+        if featured and not self.instance.banner_image and not banner:
+            raise ValidationError(_('featured package should have a banner image.'))
+        return featured
 
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     form = PackageAdminForm
-    list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable', 'is_featured']
+    list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable']
     search_fields = ['name', ]
     list_filter = ['category', ]
 
