@@ -1,12 +1,11 @@
-from django.core.validators import URLValidator
-from django.db.models import Q
+from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django.utils.translation import ugettext_lazy as _
-from apps.packages.api.serializers import PackageCategorySerializer, PackageSerializer
+from apps.packages.api.serializers import PackageCategorySerializer, PackageSerializer, PackageSliderSerializer
 from apps.packages.models import PackageCategory, Package, PackageCategoryIntervalPrice
 from utils.utils import telegram_member_count
 
@@ -60,5 +59,14 @@ class PackageCategoryViewSet(ListModelMixin,
 
         # return the result
         return Response(PackageSerializer(packages, many=True).data)
+
+    @action(methods=['get'], detail=False, serializer_class=PackageSliderSerializer)
+    def sliders(self, request, *args, **kwargs):
+        data = Package.objects.filter(
+            is_featured=True,
+            featured__gte=timezone.now()
+        )
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data)
 
 

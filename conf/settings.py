@@ -87,6 +87,8 @@ TEMPLATES = [
 ASGI_APPLICATION = "conf.asgi.application"
 WSGI_APPLICATION = 'conf.wsgi.application'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 DATABASES = {
