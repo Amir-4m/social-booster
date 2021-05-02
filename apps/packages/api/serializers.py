@@ -3,12 +3,6 @@ from rest_framework import serializers
 from apps.packages.models import Package, PackageCategory, PackageCategoryForm
 
 
-class PackageSliderSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Package
-        fields = ('category_id', 'banner_image')
-
 class PackageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -40,3 +34,11 @@ class PackageCategorySerializer(serializers.ModelSerializer):
 
     def get_form_fields(self, obj):
         return PackageCategoryFormSerializer(PackageCategoryForm.objects.filter(category=obj), many=True).data
+
+
+class PackageSliderSerializer(serializers.ModelSerializer):
+    category = PackageCategorySerializer()
+
+    class Meta:
+        model = Package
+        fields = ('category', 'banner_image')
