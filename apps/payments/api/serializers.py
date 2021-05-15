@@ -20,8 +20,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_gateways(self, obj):
         gateways_list = []
-        # if self.context['view'].action != 'create':
-        #     return gateways_list
+        if self.context['view'].action != 'create':
+            return gateways_list
 
         gateways_list = AllowedGateway.get_gateways_by_version_name(obj.version_name)
         return gateways_list
