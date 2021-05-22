@@ -179,6 +179,12 @@ SMS_GATE_WAY_TOKEN = config('SMS_GATE_WAY_TOKEN', default='')
 VERIFY_CODE_MIN = config('VERIFY_CODE_MIN', cast=int, default=10000)
 VERIFY_CODE_MAX = config('VERIFY_CODE_MAX', cast=int, default=99999)
 
+# Celery
+CELERY_BROKER_URL = 'amqp://%(USER)s:%(PASS)s@%(HOST)s' % {
+    'USER': config('CELERY_USER'),
+    'PASS': config('CELERY_PASS'),
+    'HOST': config('CELERY_HOST'),
+}
 
 LOG_DIR = BASE_DIR / 'logs'
 LOGGING = ({

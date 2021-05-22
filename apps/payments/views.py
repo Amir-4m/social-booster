@@ -8,7 +8,6 @@ from django.views import View
 
 from apps.payments.models import Order
 from apps.payments.services import CustomService
-from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -17,8 +16,7 @@ class SyncGatewayView(View):
     def get(self, request):
         # the gateways should be synced here
         if request.user.is_superuser:
-            data = CustomService.payment_request('gateways', 'get')
-            cache.set("gateways", data, None)
+            data = CustomService.update_gateways_cache()
             messages.success(request, _(f"{len(data)} gateways are added"))
         return redirect(reverse('admin:payments_allowedgateway_changelist'))
 

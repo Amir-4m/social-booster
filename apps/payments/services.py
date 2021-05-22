@@ -1,6 +1,7 @@
 import logging
 import requests
 
+from django.core.cache import cache
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -33,3 +34,9 @@ class CustomService(object):
             raise
 
         return _r.json()
+
+    @staticmethod
+    def update_gateways_cache():
+        data = CustomService.payment_request('gateways', 'get')
+        cache.set("gateways", data, None)
+        return data

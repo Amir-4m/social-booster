@@ -19,6 +19,7 @@ class PackageAdminForm(ModelForm):
             raise ValidationError(_('featured package should have a banner image.'))
         return featured
 
+
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     form = PackageAdminForm
