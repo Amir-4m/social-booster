@@ -79,7 +79,7 @@ class PackageCategoryForm(models.Model):
     key = models.SlugField(_("key"), max_length=150, blank=True)
     description = models.TextField(_("description"), blank=True)
     value_type = models.CharField(_("value type"), max_length=3, choices=VALUE_TYPE_CHOICES)
-    placeholder = models.CharField(_("placeholder"), max_length=150)
+    placeholder = models.CharField(_("placeholder"), max_length=150, default='')
     required = models.BooleanField(_("required"), default=False)
 
     def __str__(self):
