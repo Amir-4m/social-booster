@@ -14,7 +14,7 @@ class PackageCategoryFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PackageCategoryForm
-        fields = ('title', 'key', 'description', 'value_type', 'required')
+        fields = ('title', 'key', 'description', 'value_type', 'required', 'placeholder')
 
 
 class PackageCategorySerializer(serializers.ModelSerializer):
