@@ -25,6 +25,7 @@ class Order(models.Model):
     extras = models.JSONField(_("extra data"), default=dict)
     description = models.TextField(_("description"), blank=True)
     price = models.PositiveIntegerField(_('price'))
+    amount = models.PositiveIntegerField(_('amount'), default=0)
     version_name = models.CharField(_('version name'), max_length=50)
     redirect_url = models.CharField(_('redirect url'), max_length=120)
 
