@@ -26,6 +26,10 @@ class OrderSerializer(serializers.ModelSerializer):
         gateways_list = AllowedGateway.get_gateways_by_version_name(obj.version_name)
         return gateways_list
 
+    def save(self, **kwargs):
+        kwargs['amount'] = self.validated_data['package'].amount
+        return super().save(**kwargs)
+
 
 class OrderGatewaySerializer(serializers.Serializer):
     gateway = serializers.IntegerField()
