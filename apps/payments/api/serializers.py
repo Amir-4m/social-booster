@@ -15,7 +15,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        exclude = ('owner', )
+        exclude = ('owner', 'amount')
         extra_kwargs = {'extras': {'write_only': True}}
 
     def get_gateways(self, obj):
