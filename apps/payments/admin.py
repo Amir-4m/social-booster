@@ -14,6 +14,7 @@ class OrderAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},
     }
+    radio_fields = {'status': admin.HORIZONTAL}
     list_display = (
         'price', 'invoice_number',
         'gateway', 'is_paid', 'updated_time', 'created_time'
