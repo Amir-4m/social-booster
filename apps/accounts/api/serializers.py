@@ -9,7 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.state import token_backend
+from rest_framework_simplejwt.settings import api_settings
 
 from khayyam import JalaliDate
 
@@ -18,22 +19,23 @@ from utils.utils import number_converter
 from utils.validators import validate_phone_number
 
 
-class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
+class LifeTimeTokenSerializer:
 
     def validate(self, attrs):
+        # adding lifetime to data
         data = super().validate(attrs)
-        refresh = self.get_token(self.user)
-        data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
+        data['lifetime'] = int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())
+        data['user_id'] = token_backend.decode(data['access'])['user_id']
+
         return data
 
 
-class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
+class TokenObtainLifetimeSerializer(LifeTimeTokenSerializer, TokenObtainPairSerializer):
+    pass
 
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        refresh = RefreshToken(attrs['refresh'])
-        data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
-        return data
+
+class TokenRefreshLifetimeSerializer(LifeTimeTokenSerializer, TokenRefreshSerializer):
+    pass
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
