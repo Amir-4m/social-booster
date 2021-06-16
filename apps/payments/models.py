@@ -13,6 +13,21 @@ logger = logging.getLogger(__name__)
 
 
 class Order(models.Model):
+    WAITING_FOR_APPROVE = 'w8_for_approve'
+    PENDING_STATUS = 'pending'
+    REJECT_STATUS = 'reject'
+    INACTIVE_STATUS = 'inactive'
+    RUNNING_STATUS = 'running'
+    DONE_STATUS = 'done'
+
+    ORDER_STATUS_CHOICES = (
+        (WAITING_FOR_APPROVE, _('waiting for approve')),
+        (PENDING_STATUS, _('pending')),
+        (REJECT_STATUS, _('reject')),
+        (INACTIVE_STATUS, _('inactive')),
+        (RUNNING_STATUS, _('running')),
+        (DONE_STATUS, _('done')),
+    )
     created_time = models.DateTimeField(_("created time"), auto_now_add=True)
     updated_time = models.DateTimeField(_("updated time"), auto_now=True)
 
@@ -20,7 +35,7 @@ class Order(models.Model):
     invoice_number = models.UUIDField(_('uuid'), unique=True, default=uuid.uuid4, editable=False)
     transaction_id = models.CharField(_('transaction id'), unique=True, null=True, max_length=40)
     is_paid = models.BooleanField(_("is paid"), null=True, editable=False)
-    is_done = models.BooleanField(_("is done"), default=False)
+    status = models.CharField(_("status"), max_length=14, choices=ORDER_STATUS_CHOICES, default=WAITING_FOR_APPROVE)
 
     extras = models.JSONField(_("extra data"), default=dict)
     description = models.TextField(_("description"), blank=True)
