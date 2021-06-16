@@ -28,6 +28,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         kwargs['amount'] = self.validated_data['package'].amount
+
+        if self.validated_data['description'] != '':
+            kwargs['status'] = Order.PENDING_STATUS
+
         return super().save(**kwargs)
 
 

@@ -16,10 +16,10 @@ class OrderAdmin(admin.ModelAdmin):
     }
     radio_fields = {'status': admin.HORIZONTAL}
     list_display = (
-        'price', 'invoice_number',
+        'price', 'invoice_number', 'status',
         'gateway', 'is_paid', 'updated_time', 'created_time'
     )
-    list_filter = ('is_paid', 'gateway', )
+    list_filter = ('is_paid', 'gateway', 'status')
     search_fields = ('owner__username', )
 
 
