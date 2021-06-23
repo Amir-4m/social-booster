@@ -1,8 +1,28 @@
+from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib import admin
 from django.forms import ModelForm
+
 from apps.packages.models import Package, PackageCategory, PackageCategoryIntervalPrice, PackageCategoryForm
+
+
+class IsFeaturedFilterSpec(SimpleListFilter):
+    title = _('is featured')
+    parameter_name = 'f'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', _('is featured'), ),
+            ('0', _('is not featured'), ),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == '0':
+            return queryset.filter(featured__isnull=True)
+        if self.value() == '1':
+            return queryset.filter(featured__isnull=False)
+        return queryset
 
 
 class PackageAdminForm(ModelForm):
@@ -25,7 +45,7 @@ class PackageAdmin(admin.ModelAdmin):
     form = PackageAdminForm
     list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable']
     search_fields = ['name', ]
-    list_filter = ['category', ]
+    list_filter = ['category', IsFeaturedFilterSpec]
 
 
 class PackageCategoryIntervalPriceInline(admin.TabularInline):
