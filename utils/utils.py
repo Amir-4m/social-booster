@@ -151,7 +151,7 @@ def telegram_member_count(link):
     members_string_list = members_soup.get_text().split(" ")
     for i in range(len(members_string_list)):
         members_string_list[i] = members_string_list[i].replace(",", "")
-    members_index = members_string_list.index("members")
+    members_index = members_string_list.index("subscribers")
     members_count = int(''.join(members_string_list[:members_index]))
     return members_count
 
