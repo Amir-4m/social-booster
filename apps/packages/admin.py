@@ -43,7 +43,7 @@ class PackageAdminForm(ModelForm):
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     form = PackageAdminForm
-    list_display = ['name', 'price', 'discount', 'final_price', 'category', 'updated_time', 'is_enable']
+    list_display = ['name', 'price', 'amount', 'final_price', 'category', 'updated_time', 'is_enable']
     search_fields = ['name', ]
     list_filter = ['category', IsFeaturedFilterSpec]
 
