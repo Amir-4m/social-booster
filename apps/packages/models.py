@@ -129,6 +129,9 @@ class Package(models.Model):
 
     objects = PackageManager()
 
+    class Meta:
+        ordering = ['-amount']
+
     @property
     def final_price(self):
         if self.price is None:
