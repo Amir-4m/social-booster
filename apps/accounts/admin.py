@@ -23,9 +23,9 @@ class MyUserAdmin(UserAdmin):
             'fields': ('first_name', 'last_name', 'phone_number', 'password1', 'password2'),
         }),
     )
-    list_display = ('phone_number', 'first_name', 'last_name', 'is_staff')
+    list_display = ('phone_number', 'first_name', 'last_name', 'is_staff', 'date_joined')
     search_fields = ('phone_number', 'first_name', 'last_name')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
     ordering = ('phone_number',)
 
 
