@@ -142,9 +142,9 @@ class JalaliTimeMixin:
 
 def telegram_member_count(link):
     """
-        link: argument format should be like --> 'https://t.me/varzesh3'
+        link: argument format should be like --> 'varzesh3'
     """
-    page = requests.get(link, allow_redirects=False)
+    page = requests.get(f"https://t.me/{link}", allow_redirects=False)
     page.raise_for_status()
     soup = BeautifulSoup(page.text, "html.parser")
     members_soup = soup.find("div", class_="tgme_page_extra")
