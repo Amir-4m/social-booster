@@ -42,7 +42,11 @@ class PackageCategoryViewSet(ListModelMixin,
 
         # get members count for the given URL
         try:
-            link = link.replace('@', '')
+            if 'http' in link:
+                link = link.split('/')[-1]
+            else:
+                link = link.replace('@', '')
+
             members_count = telegram_member_count(link)
         except Exception as e:
             raise ValidationError(_(f"{link} is not a valid or accessible URL"))
